@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://cv2xot126j8ji"]
+
+[ext_resource type="PackedScene" uid="uid://r71cb3t2nhmo" path="res://assets/model/tavernprops/torch.glb" id="1_kawi0"]
+
+[node name="torch" unique_id=1070556331 instance=ExtResource("1_kawi0")]

@@ -1,0 +1,357 @@
+[gd_scene format=3 uid="uid://7gddu6mrf8ck"]
+
+[ext_resource type="Script" uid="uid://lfcwhlc0600o" path="res://scripts/player.gd" id="1_3vyb7"]
+[ext_resource type="PackedScene" uid="uid://dpm667kbxxx1n" path="res://assets/model/Other/Sword.glb" id="2_ykyjo"]
+[ext_resource type="Texture2D" uid="uid://bjxcoed33hjjp" path="res://assets/Sprites/healthbarbacunder.png" id="3_nmc1l"]
+[ext_resource type="Texture2D" uid="uid://70yvmne6768b" path="res://assets/Sprites/healthbarover.png" id="4_f46kd"]
+[ext_resource type="Script" uid="uid://dehcw7k64mt5" path="res://scenes/Interaction/playerInteractionHandler.gd" id="5_q8hb4"]
+[ext_resource type="Script" uid="uid://kl7r6djpbhe2" path="res://scenes/Inventory/ItemData.gd" id="6_ksjmp"]
+[ext_resource type="PackedScene" uid="uid://3kg10en51miy" path="res://scenes/Items/item_test_cube.tscn" id="7_2rlf8"]
+[ext_resource type="Texture2D" uid="uid://djx5ov4jr3f3i" path="res://assets/Textures/BoxIcon.png" id="8_4c2uj"]
+[ext_resource type="PackedScene" uid="uid://bo18cxh21hwxh" path="res://assets/Sprites/items/Cube.tscn" id="9_37b34"]
+[ext_resource type="PackedScene" uid="uid://g3ufkjgyjbhl" path="res://scenes/Items/TestSphere.tscn" id="9_dunks"]
+[ext_resource type="Texture2D" uid="uid://dmm2hx7m8xjq5" path="res://assets/Textures/SphereIcon.png" id="10_68atb"]
+[ext_resource type="Texture2D" uid="uid://bl2fquf4vrwwh" path="res://assets/Textures/SwordIcon.png" id="11_2lybl"]
+[ext_resource type="Script" uid="uid://do2qk68rcf51f" path="res://scenes/Inventory/InventoryHandler.gd" id="11_dunks"]
+[ext_resource type="PackedScene" uid="uid://dxmxnd04lqyr2" path="res://scenes/Items/sword.tscn" id="12_6uaar"]
+[ext_resource type="PackedScene" uid="uid://bdtjd2v0hpe17" path="res://assets/Sprites/items/sphere.tscn" id="12_jfdn7"]
+[ext_resource type="Texture2D" uid="uid://c5ck8v7p17y7a" path="res://assets/Textures/torch.png" id="13_2iaiu"]
+[ext_resource type="PackedScene" uid="uid://cbdhokl2jfye3" path="res://scenes/Items/torch.tscn" id="14_ae4o8"]
+[ext_resource type="PackedScene" uid="uid://dhx50wgy88y5a" path="res://assets/Sprites/items/sword.tscn" id="15_xeqme"]
+[ext_resource type="PackedScene" uid="uid://cv2xot126j8ji" path="res://assets/Sprites/items/torch.tscn" id="18_x3mv4"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_u8vuu"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3vyb7"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="Animation" id="Animation_54rde"]
+resource_name = "Guard"
+length = 0.96666664
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FirstPov/EquippedItem:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.9624713, -0.7396934, 1.0691814)]
+}
+
+[sub_resource type="Animation" id="Animation_ykyjo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FirstPov/EquippedItem:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.36234128, -0.6246026, -0.92059416)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("FirstPov/EquippedItem:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.5136739, -1.459184, 0.6025811)]
+}
+
+[sub_resource type="Animation" id="Animation_uxov2"]
+resource_name = "swordswing"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FirstPov/EquippedItem:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.26666668),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.36234128, -0.6246026, -0.92059416), Vector3(0.36234128, -1.0133821, -0.88211995), Vector3(0.36234128, -0.6246026, -0.92059416)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("FirstPov/EquippedItem:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.26666668),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.5136739, -1.459184, 0.6025811), Vector3(0.42757022, -0.9023326, 1.0433035), Vector3(0.5136739, -1.459184, 0.6025811)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.13333334),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"deal_Damage"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nmc1l"]
+_data = {
+&"Guard": SubResource("Animation_54rde"),
+&"RESET": SubResource("Animation_ykyjo"),
+&"swordswing": SubResource("Animation_uxov2")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_54rde"]
+size = Vector3(1, 1, 1.0771484)
+
+[sub_resource type="Resource" id="Resource_2rlf8"]
+script = ExtResource("6_ksjmp")
+ItemName = "Cube"
+Icon = ExtResource("8_4c2uj")
+ItemModelPrefab = ExtResource("7_2rlf8")
+UsableModel = ExtResource("9_37b34")
+metadata/_custom_type_script = "uid://kl7r6djpbhe2"
+
+[sub_resource type="Resource" id="Resource_2lybl"]
+script = ExtResource("6_ksjmp")
+ItemName = "Sphere"
+Icon = ExtResource("10_68atb")
+ItemModelPrefab = ExtResource("9_dunks")
+UsableModel = ExtResource("12_jfdn7")
+metadata/_custom_type_script = "uid://kl7r6djpbhe2"
+
+[sub_resource type="Resource" id="Resource_2iaiu"]
+script = ExtResource("6_ksjmp")
+ItemName = "Sword"
+Icon = ExtResource("11_2lybl")
+ItemModelPrefab = ExtResource("12_6uaar")
+UsableModel = ExtResource("15_xeqme")
+metadata/_custom_type_script = "uid://kl7r6djpbhe2"
+
+[sub_resource type="Resource" id="Resource_ae4o8"]
+script = ExtResource("6_ksjmp")
+ItemName = "torch"
+Icon = ExtResource("13_2iaiu")
+ItemModelPrefab = ExtResource("14_ae4o8")
+UsableModel = ExtResource("18_x3mv4")
+metadata/_custom_type_script = "uid://kl7r6djpbhe2"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q8hb4"]
+size = Vector3(3, 3, 3)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2rlf8"]
+bg_color = Color(0.223238, 0.24924, 0.26794, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.8, 0.8, 0.129412)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.168627)
+shadow_size = 3
+shadow_offset = Vector2(-1, 3)
+
+[node name="player" type="CharacterBody3D" unique_id=508285439 groups=["Player"]]
+script = ExtResource("1_3vyb7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=14398477]
+mesh = SubResource("CapsuleMesh_u8vuu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2086748539]
+shape = SubResource("CapsuleShape3D_3vyb7")
+
+[node name="FirstPov" type="Camera3D" parent="." unique_id=262764929]
+transform = Transform3D(1, 0, 0, 0, 0.99999976, 0.00068069994, 0, -0.00068069994, 0.99999976, -0.043230772, 0.57820284, -0.030159459)
+fov = 84.60744
+
+[node name="EquippedItem" type="Node3D" parent="FirstPov" unique_id=1795369774]
+transform = Transform3D(-0.18500343, -0.46544454, -0.8655257, 0.49362653, 0.7175503, -0.4913802, 0.8497691, -0.5181533, 0.09700644, 0.36234128, -0.6246026, -0.92059416)
+
+[node name="Sword" parent="FirstPov/EquippedItem" unique_id=963617168 instance=ExtResource("2_ykyjo")]
+transform = Transform3D(1, 0, 0, 0, -0.8768862, -0.48069805, 0, 0.48069805, -0.8768862, 0.46388656, 0.2206431, -0.42856932)
+visible = false
+
+[node name="Cube" parent="FirstPov/EquippedItem" unique_id=1821397002 instance=ExtResource("9_37b34")]
+transform = Transform3D(1, -2.9802322e-08, -7.450581e-09, 2.9802322e-08, 0.9999999, 7.450581e-09, 7.450581e-09, -1.1175871e-08, 0.99999994, -0.05074352, -0.12766424, -0.23740038)
+visible = false
+
+[node name="Sphere" parent="FirstPov/EquippedItem" unique_id=1801132503 instance=ExtResource("12_jfdn7")]
+transform = Transform3D(0.99999976, -8.940697e-08, -2.2351742e-08, 2.0861626e-07, 0.99999934, -4.0978193e-08, 7.450581e-09, -4.8428774e-08, 0.9999998, 0.27406532, -0.047173917, -0.20365158)
+visible = false
+
+[node name="torch" parent="FirstPov/EquippedItem" unique_id=1070556331 instance=ExtResource("18_x3mv4")]
+transform = Transform3D(0.9999998, -5.9604645e-08, -3.7252903e-08, 1.4901161e-07, 0.99999946, -3.3527613e-08, 0, -1.8626451e-08, 0.9999998, 0.46587324, -0.10415858, -0.29379877)
+visible = false
+
+[node name="Head" type="Node3D" parent="." unique_id=2009066571]
+
+[node name="ThirdPov" type="Camera3D" parent="Head" unique_id=640098550]
+transform = Transform3D(1, 0, 0, 0, 0.99593806, 0.09004155, 0, -0.09004155, 0.99593806, 0, 1.0976617, 2.0883977)
+fov = 96.5234
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1247828020]
+libraries/ = SubResource("AnimationLibrary_nmc1l")
+
+[node name="AttackCoolDown" type="Timer" parent="." unique_id=754376697]
+wait_time = 0.4
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=233016677]
+
+[node name="HpBar" type="TextureProgressBar" parent="HUD" unique_id=95519875]
+offset_left = 47.0
+offset_top = 30.0
+offset_right = 286.0
+offset_bottom = 70.0
+texture_under = ExtResource("3_nmc1l")
+texture_progress = ExtResource("4_f46kd")
+
+[node name="GoldLabel" type="Label" parent="HUD" unique_id=1106950142]
+offset_left = 1073.0
+offset_top = 587.0
+offset_right = 1113.0
+offset_bottom = 621.0
+theme_type_variation = &"HeaderMedium"
+text = "0"
+
+[node name="attackZone" type="Area3D" parent="." unique_id=526778820]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="attackZone" unique_id=833505016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.0290011)
+shape = SubResource("BoxShape3D_54rde")
+
+[node name="deathScreen" type="CanvasLayer" parent="." unique_id=1418000646]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="deathScreen" unique_id=1814683148]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = 580.0
+offset_bottom = 327.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.30980393, 0.043137256, 0, 0.5294118)
+
+[node name="Label" type="Label" parent="deathScreen/ColorRect" unique_id=2093080270]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -47.0
+offset_top = -14.0
+offset_right = 47.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.58023477, 0.13610238, 0, 1)
+theme_override_font_sizes/font_size = 66
+text = "You Died"
+
+[node name="Respawn" type="Button" parent="deathScreen/ColorRect" unique_id=479746744]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -65.0
+offset_top = -137.0
+offset_right = 65.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 28
+text = "Respawn"
+
+[node name="InteractbleZone" type="Area3D" parent="." unique_id=504841154]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("5_q8hb4")
+ItemTypes = Array[ExtResource("6_ksjmp")]([SubResource("Resource_2rlf8"), SubResource("Resource_2lybl"), SubResource("Resource_2iaiu"), SubResource("Resource_ae4o8")])
+
+[node name="Interactblecolision" type="CollisionShape3D" parent="InteractbleZone" unique_id=443022718]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("BoxShape3D_q8hb4")
+
+[node name="InventoryUI" type="Control" parent="." unique_id=862117155 node_paths=PackedStringArray("playerBody", "InventoryGrid")]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_dunks")
+playerBody = NodePath("..")
+CollisionMask = 1
+InventoryGrid = NodePath("Panel/MarginContainer/GridContainer")
+
+[node name="Panel" type="Panel" parent="InventoryUI" unique_id=990637353]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 49.0
+offset_top = -328.0
+offset_right = 414.0
+offset_bottom = -43.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_2rlf8")
+
+[node name="MarginContainer" type="MarginContainer" parent="InventoryUI/Panel" unique_id=470115281]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="GridContainer" type="GridContainer" parent="InventoryUI/Panel/MarginContainer" unique_id=1281191147]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
+columns = 5
+
+[connection signal="timeout" from="AttackCoolDown" to="." method="_on_attack_cool_down_timeout"]
+[connection signal="body_entered" from="attackZone" to="." method="_on_attack_zone_body_entered"]
+[connection signal="body_exited" from="attackZone" to="." method="_on_attack_zone_body_exited"]
+[connection signal="pressed" from="deathScreen/ColorRect/Respawn" to="." method="_on_respawn_pressed"]
+[connection signal="OnItemPickedUp" from="InteractbleZone" to="InventoryUI" method="pickupItem"]
+[connection signal="body_entered" from="InteractbleZone" to="InteractbleZone" method="_on_body_entered"]
+[connection signal="body_exited" from="InteractbleZone" to="InteractbleZone" method="_on_body_exited"]

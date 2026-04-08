@@ -1,0 +1,496 @@
+[gd_scene format=3 uid="uid://bm8uly0otrbty"]
+
+[ext_resource type="PackedScene" uid="uid://c6pwgggpdnkw7" path="res://assets/model/CliffProps/cliffProps1.glb" id="1_hgrhv"]
+[ext_resource type="PackedScene" uid="uid://b26fwg3f8cxtw" path="res://assets/model/CliffProps/cliffProps4.glb" id="2_dr8ba"]
+[ext_resource type="PackedScene" uid="uid://dfbv7pvl8p71v" path="res://assets/model/CliffProps/cliffProps2.glb" id="3_v5b4n"]
+[ext_resource type="PackedScene" uid="uid://co5csm16lypc7" path="res://assets/model/CliffProps/cliffProps3.glb" id="4_ysdsq"]
+[ext_resource type="PackedScene" uid="uid://bwe1wx4wq8w2w" path="res://assets/model/CliffProps/cliffProps5.glb" id="5_phgsc"]
+[ext_resource type="PackedScene" uid="uid://cgk0obffyvmh" path="res://scenes/objects/tree.tscn" id="6_a2svu"]
+[ext_resource type="PackedScene" uid="uid://qyghwaiojdet" path="res://assets/model/Other/tavern.glb" id="7_emu1g"]
+[ext_resource type="PackedScene" uid="uid://c08in14niiude" path="res://scenes/objects/interior.tscn" id="8_hvdyd"]
+[ext_resource type="PackedScene" uid="uid://7gddu6mrf8ck" path="res://scenes/objects/player.tscn" id="9_dr8ba"]
+[ext_resource type="PackedScene" uid="uid://b6tsqe0oly21d" path="res://scenes/portal.tscn" id="9_v5b4n"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_co50f"]
+size = Vector3(50, 4, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rg7ok"]
+size = Vector3(50, 1, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pvi7j"]
+albedo_color = Color(0.17431074, 0.20515192, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_5wjeq"]
+size = Vector2(50, 50)
+orientation = 1
+
+[node name="World2" type="Node3D" unique_id=250256519]
+
+[node name="cliffs" type="Node" parent="." unique_id=1327882256]
+
+[node name="cliff" type="StaticBody3D" parent="cliffs" unique_id=1100927382]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.16700459, 0)
+
+[node name="cliffProps1" parent="cliffs/cliff" unique_id=1788122208 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.6601, 0.25000095, 7.0944104)
+
+[node name="cliffProps4" parent="cliffs/cliff" unique_id=1349849486 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355797, 0, 0.9997501, 0, 1, 0, -0.9997501, 0, 0.022355797, -25.334152, 1.868227, 4.6223006)
+
+[node name="cliffProps2" parent="cliffs/cliff" unique_id=341415911 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.99793637, -0.062302787, -24.830048, 1.25, 8.942404)
+
+[node name="cliffProps5" parent="cliffs/cliff" unique_id=438906331 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776885, 0, 0.9412291, 0, 1, 0, -0.9412291, 0, 0.33776885, -24.606794, 2.034079, 10.804117)
+
+[node name="cliffProps3" parent="cliffs/cliff" unique_id=1710330902 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, 8.522422)
+
+[node name="cliffProps6" parent="cliffs/cliff" unique_id=668273225 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882937, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854565, -25.1036, 1.890018, 1.3668945)
+
+[node name="cliffProps7" parent="cliffs/cliff" unique_id=517586156 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.587948, 2.25, 13.518621)
+
+[node name="cliffProps8" parent="cliffs/cliff" unique_id=1944549819 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550371, 3.2570286, 7.1489124)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="cliffs/cliff" unique_id=1590133524]
+transform = Transform3D(-0.0032463185, 0, 0.99999475, 0, 1, 0, -0.99999475, 0, -0.0032463185, -24.418894, 2.600812, -0.1930275)
+shape = SubResource("BoxShape3D_co50f")
+
+[node name="cliffProps9" parent="cliffs/cliff" unique_id=2098946726 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.6601, 0.25000095, -7.3114505)
+
+[node name="cliffProps10" parent="cliffs/cliff" unique_id=1570729268 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355797, 0, 0.9997501, 0, 1, 0, -0.9997501, 0, 0.022355797, -25.334152, 1.868227, -9.78356)
+
+[node name="cliffProps11" parent="cliffs/cliff" unique_id=1552765954 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.99793637, -0.062302787, -24.830048, 1.25, -5.463457)
+
+[node name="cliffProps12" parent="cliffs/cliff" unique_id=263641841 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776885, 0, 0.9412291, 0, 1, 0, -0.9412291, 0, 0.33776885, -24.606794, 2.034079, -3.6017437)
+
+[node name="cliffProps13" parent="cliffs/cliff" unique_id=379378207 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, -5.883439)
+
+[node name="cliffProps14" parent="cliffs/cliff" unique_id=483087533 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882937, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854565, -25.1036, 1.890018, -13.038966)
+
+[node name="cliffProps15" parent="cliffs/cliff" unique_id=1360575090 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.587948, 2.25, -0.88723946)
+
+[node name="cliffProps16" parent="cliffs/cliff" unique_id=1649034639 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550371, 3.2570286, -7.2569485)
+
+[node name="cliffProps17" parent="cliffs/cliff" unique_id=1981965906 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.6601, 0.25000095, 18.330519)
+
+[node name="cliffProps18" parent="cliffs/cliff" unique_id=2137981910 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355797, 0, 0.9997501, 0, 1, 0, -0.9997501, 0, 0.022355797, -25.334152, 1.868227, 15.85841)
+
+[node name="cliffProps19" parent="cliffs/cliff" unique_id=573600592 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.99793637, -0.062302787, -24.830048, 1.25, 20.178513)
+
+[node name="cliffProps20" parent="cliffs/cliff" unique_id=1343308372 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776885, 0, 0.9412291, 0, 1, 0, -0.9412291, 0, 0.33776885, -24.606794, 2.034079, 22.040226)
+
+[node name="cliffProps21" parent="cliffs/cliff" unique_id=2134986110 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, 19.75853)
+
+[node name="cliffProps22" parent="cliffs/cliff" unique_id=1522625231 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882937, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854565, -25.1036, 1.890018, 12.6030035)
+
+[node name="cliffProps23" parent="cliffs/cliff" unique_id=114008437 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.587948, 2.25, 24.75473)
+
+[node name="cliffProps24" parent="cliffs/cliff" unique_id=1716225352 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550371, 3.2570286, 18.385021)
+
+[node name="cliffProps25" parent="cliffs/cliff" unique_id=1186588970 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.6601, 0.25000095, -20.668758)
+
+[node name="cliffProps26" parent="cliffs/cliff" unique_id=494372880 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355797, 0, 0.9997501, 0, 1, 0, -0.9997501, 0, 0.022355797, -25.334152, 1.868227, -23.140867)
+
+[node name="cliffProps27" parent="cliffs/cliff" unique_id=1537865881 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.99793637, -0.062302787, -24.830048, 1.25, -18.820765)
+
+[node name="cliffProps28" parent="cliffs/cliff" unique_id=495059611 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776885, 0, 0.9412291, 0, 1, 0, -0.9412291, 0, 0.33776885, -24.606794, 2.034079, -16.959051)
+
+[node name="cliffProps29" parent="cliffs/cliff" unique_id=929000898 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, -19.240746)
+
+[node name="cliffProps30" parent="cliffs/cliff" unique_id=1617474244 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882937, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854565, -25.1036, 1.890018, -26.396275)
+
+[node name="cliffProps31" parent="cliffs/cliff" unique_id=225367018 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.587948, 2.25, -14.244547)
+
+[node name="cliffProps32" parent="cliffs/cliff" unique_id=266234278 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550371, 3.2570286, -20.614256)
+
+[node name="cliff2" type="StaticBody3D" parent="cliffs" unique_id=316629633]
+transform = Transform3D(-0.02809612, 0, 0.99960524, 0, 1, 0, -0.99960524, 0, -0.02809612, 0, -0.3371415, 0)
+
+[node name="cliffProps1" parent="cliffs/cliff2" unique_id=574874281 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.6601, 0.25000095, 7.0944104)
+
+[node name="cliffProps4" parent="cliffs/cliff2" unique_id=1025266814 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355797, 0, 0.9997501, 0, 1, 0, -0.9997501, 0, 0.022355797, -25.334152, 1.868227, 4.6223006)
+
+[node name="cliffProps2" parent="cliffs/cliff2" unique_id=990168352 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.99793637, -0.062302787, -24.830048, 1.25, 8.942404)
+
+[node name="cliffProps5" parent="cliffs/cliff2" unique_id=475993500 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776885, 0, 0.9412291, 0, 1, 0, -0.9412291, 0, 0.33776885, -24.606794, 2.034079, 10.804117)
+
+[node name="cliffProps3" parent="cliffs/cliff2" unique_id=594501674 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, 8.522422)
+
+[node name="cliffProps6" parent="cliffs/cliff2" unique_id=1460717025 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882937, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854565, -25.1036, 1.890018, 1.3668945)
+
+[node name="cliffProps7" parent="cliffs/cliff2" unique_id=237415044 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.587948, 2.25, 13.518621)
+
+[node name="cliffProps8" parent="cliffs/cliff2" unique_id=2120112332 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550371, 3.2570286, 7.1489124)
+
+[node name="cliffProps9" parent="cliffs/cliff2" unique_id=485250093 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.660103, 0.25000095, -7.311451)
+
+[node name="cliffProps10" parent="cliffs/cliff2" unique_id=979925650 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355799, 0, 0.99975014, 0, 1, 0, -0.99975014, 0, 0.022355799, -25.334154, 1.868227, -9.783561)
+
+[node name="cliffProps11" parent="cliffs/cliff2" unique_id=1328997520 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.00096990925, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.9979364, -0.062302783, -24.830048, 1.25, -5.4634576)
+
+[node name="cliffProps12" parent="cliffs/cliff2" unique_id=529207949 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776888, 0, 0.94122916, 0, 1, 0, -0.94122916, 0, 0.33776888, -24.606794, 2.034079, -3.6017432)
+
+[node name="cliffProps13" parent="cliffs/cliff2" unique_id=1981210602 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, -5.883439)
+
+[node name="cliffProps14" parent="cliffs/cliff2" unique_id=1218629817 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882934, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854562, -25.1036, 1.890018, -13.038967)
+
+[node name="cliffProps15" parent="cliffs/cliff2" unique_id=1917842487 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.58795, 2.25, -0.88723934)
+
+[node name="cliffProps16" parent="cliffs/cliff2" unique_id=549475605 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550373, 3.2570286, -7.256949)
+
+[node name="cliffProps17" parent="cliffs/cliff2" unique_id=1918321224 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.6601, 0.25000095, 18.330519)
+
+[node name="cliffProps18" parent="cliffs/cliff2" unique_id=1229476548 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355799, 0, 0.99975014, 0, 1, 0, -0.99975014, 0, 0.022355799, -25.334152, 1.868227, 15.85841)
+
+[node name="cliffProps19" parent="cliffs/cliff2" unique_id=1242254386 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.00096990925, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.9979364, -0.062302783, -24.830048, 1.25, 20.178514)
+
+[node name="cliffProps20" parent="cliffs/cliff2" unique_id=409431088 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776888, 0, 0.94122916, 0, 1, 0, -0.94122916, 0, 0.33776888, -24.606792, 2.034079, 22.040226)
+
+[node name="cliffProps21" parent="cliffs/cliff2" unique_id=1726745806 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, 19.75853)
+
+[node name="cliffProps22" parent="cliffs/cliff2" unique_id=1644317611 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882934, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854562, -25.1036, 1.890018, 12.6030035)
+
+[node name="cliffProps23" parent="cliffs/cliff2" unique_id=1520798119 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.58795, 2.25, 24.75473)
+
+[node name="cliffProps24" parent="cliffs/cliff2" unique_id=1181231149 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550373, 3.2570286, 18.385021)
+
+[node name="cliffProps25" parent="cliffs/cliff2" unique_id=338903000 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.6601, 0.25000095, -20.668758)
+
+[node name="cliffProps26" parent="cliffs/cliff2" unique_id=634272135 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355799, 0, 0.99975014, 0, 1, 0, -0.99975014, 0, 0.022355799, -25.334152, 1.868227, -23.14087)
+
+[node name="cliffProps27" parent="cliffs/cliff2" unique_id=1627438549 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.00096990925, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.9979364, -0.062302783, -24.830048, 1.25, -18.820766)
+
+[node name="cliffProps28" parent="cliffs/cliff2" unique_id=2108966975 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776888, 0, 0.94122916, 0, 1, 0, -0.94122916, 0, 0.33776888, -24.606794, 2.034079, -16.959051)
+
+[node name="cliffProps29" parent="cliffs/cliff2" unique_id=1300946301 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, -19.240746)
+
+[node name="cliffProps30" parent="cliffs/cliff2" unique_id=1744314755 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882934, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854562, -25.1036, 1.890018, -26.396275)
+
+[node name="cliffProps31" parent="cliffs/cliff2" unique_id=638814629 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.587948, 2.25, -14.244547)
+
+[node name="cliffProps32" parent="cliffs/cliff2" unique_id=1170309878 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550371, 3.2570286, -20.614256)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="cliffs/cliff2" unique_id=1337076456]
+transform = Transform3D(-0.0032463185, 0, 0.99999475, 0, 1, 0, -0.99999475, 0, -0.0032463185, -24.418894, 2.600812, -0.1930275)
+shape = SubResource("BoxShape3D_co50f")
+
+[node name="cliff3" type="StaticBody3D" parent="cliffs" unique_id=676648339]
+transform = Transform3D(-0.99965364, 0, -0.026316617, 0, 1, 0, 0.026316617, 0, -0.99965364, -0.6628361, -0.49022675, 0)
+
+[node name="cliffProps1" parent="cliffs/cliff3" unique_id=831851686 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.6601, 0.25000095, 7.0944104)
+
+[node name="cliffProps4" parent="cliffs/cliff3" unique_id=832671391 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355797, 0, 0.9997501, 0, 1, 0, -0.9997501, 0, 0.022355797, -25.334152, 1.868227, 4.6223006)
+
+[node name="cliffProps2" parent="cliffs/cliff3" unique_id=1712846398 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.99793637, -0.062302787, -24.830048, 1.25, 8.942404)
+
+[node name="cliffProps5" parent="cliffs/cliff3" unique_id=728271909 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776885, 0, 0.9412291, 0, 1, 0, -0.9412291, 0, 0.33776885, -24.606794, 2.034079, 10.804117)
+
+[node name="cliffProps3" parent="cliffs/cliff3" unique_id=81930988 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, 8.522422)
+
+[node name="cliffProps6" parent="cliffs/cliff3" unique_id=469586871 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882937, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854565, -25.1036, 1.890018, 1.3668945)
+
+[node name="cliffProps7" parent="cliffs/cliff3" unique_id=1127895629 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.587948, 2.25, 13.518621)
+
+[node name="cliffProps8" parent="cliffs/cliff3" unique_id=372963958 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550371, 3.2570286, 7.1489124)
+
+[node name="cliffProps9" parent="cliffs/cliff3" unique_id=984073416 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310908, 0, 0.99999094, 0, 1, 0, -0.99999094, 0, 0.004310908, -24.660103, 0.25000095, -7.311451)
+
+[node name="cliffProps10" parent="cliffs/cliff3" unique_id=2027195314 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355799, 0, 0.99975014, 0, 1, 0, -0.99975014, 0, 0.022355799, -25.334154, 1.868227, -9.783561)
+
+[node name="cliffProps11" parent="cliffs/cliff3" unique_id=7266402 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.00096990936, -0.062295243, 0.99805737, -0.9998788, -0.0155676715, 0, 0.0155374305, -0.9979364, -0.062302783, -24.83005, 1.25, -5.4634585)
+
+[node name="cliffProps12" parent="cliffs/cliff3" unique_id=521631492 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776888, 0, 0.9412292, 0, 1, 0, -0.9412292, 0, 0.33776888, -24.606798, 2.034079, -3.6017442)
+
+[node name="cliffProps13" parent="cliffs/cliff3" unique_id=1451957746 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.07146263, 0, 0.9974434, 0, 1, 0, -0.9974434, 0, -0.07146263, -24.730795, 2.1633952, -5.883439)
+
+[node name="cliffProps14" parent="cliffs/cliff3" unique_id=709316048 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.3688294, 0.06584142, 0.9271623, -0.008643939, 0.99768794, -0.067411125, -0.9294569, 0.016848866, 0.36854568, -25.103603, 1.890018, -13.038967)
+
+[node name="cliffProps15" parent="cliffs/cliff3" unique_id=1465932727 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.587952, 2.25, -0.8872396)
+
+[node name="cliffProps16" parent="cliffs/cliff3" unique_id=1886232730 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.550375, 3.2570286, -7.2569494)
+
+[node name="cliffProps17" parent="cliffs/cliff3" unique_id=1812400786 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310908, 0, 0.99999094, 0, 1, 0, -0.99999094, 0, 0.004310908, -24.660105, 0.25000095, 18.330523)
+
+[node name="cliffProps18" parent="cliffs/cliff3" unique_id=542824221 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355799, 0, 0.99975014, 0, 1, 0, -0.99975014, 0, 0.022355799, -25.334154, 1.868227, 15.858411)
+
+[node name="cliffProps19" parent="cliffs/cliff3" unique_id=1582920620 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.00096990936, -0.062295243, 0.99805737, -0.9998788, -0.0155676715, 0, 0.0155374305, -0.9979364, -0.062302783, -24.83005, 1.25, 20.178516)
+
+[node name="cliffProps20" parent="cliffs/cliff3" unique_id=1065640481 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776888, 0, 0.9412292, 0, 1, 0, -0.9412292, 0, 0.33776888, -24.606796, 2.034079, 22.04023)
+
+[node name="cliffProps21" parent="cliffs/cliff3" unique_id=1001683044 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.07146263, 0, 0.9974434, 0, 1, 0, -0.9974434, 0, -0.07146263, -24.730797, 2.1633952, 19.758533)
+
+[node name="cliffProps22" parent="cliffs/cliff3" unique_id=1790391103 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.3688294, 0.06584142, 0.9271623, -0.008643939, 0.99768794, -0.067411125, -0.9294569, 0.016848866, 0.36854568, -25.103601, 1.890018, 12.6030035)
+
+[node name="cliffProps23" parent="cliffs/cliff3" unique_id=620163300 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.587952, 2.25, 24.754732)
+
+[node name="cliffProps24" parent="cliffs/cliff3" unique_id=499703665 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.550375, 3.2570286, 18.385023)
+
+[node name="cliffProps25" parent="cliffs/cliff3" unique_id=1272395022 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310908, 0, 0.99999094, 0, 1, 0, -0.99999094, 0, 0.004310908, -24.660105, 0.25000095, -20.668756)
+
+[node name="cliffProps26" parent="cliffs/cliff3" unique_id=1048408968 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355799, 0, 0.99975014, 0, 1, 0, -0.99975014, 0, 0.022355799, -25.334154, 1.868227, -23.14087)
+
+[node name="cliffProps27" parent="cliffs/cliff3" unique_id=1680102908 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.00096990936, -0.062295243, 0.99805737, -0.9998788, -0.0155676715, 0, 0.0155374305, -0.9979364, -0.062302783, -24.830051, 1.25, -18.820765)
+
+[node name="cliffProps28" parent="cliffs/cliff3" unique_id=1093375098 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776888, 0, 0.9412292, 0, 1, 0, -0.9412292, 0, 0.33776888, -24.606798, 2.034079, -16.959051)
+
+[node name="cliffProps29" parent="cliffs/cliff3" unique_id=2085594743 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.07146263, 0, 0.9974434, 0, 1, 0, -0.9974434, 0, -0.07146263, -24.730797, 2.1633952, -19.240747)
+
+[node name="cliffProps30" parent="cliffs/cliff3" unique_id=1387225299 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.3688294, 0.06584142, 0.9271623, -0.008643939, 0.99768794, -0.067411125, -0.9294569, 0.016848866, 0.36854568, -25.103601, 1.890018, -26.396275)
+
+[node name="cliffProps31" parent="cliffs/cliff3" unique_id=920838051 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.58795, 2.25, -14.244547)
+
+[node name="cliffProps32" parent="cliffs/cliff3" unique_id=1834478731 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.550375, 3.2570286, -20.614256)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="cliffs/cliff3" unique_id=1195297322]
+transform = Transform3D(-0.0032463185, 0, 0.99999475, 0, 1, 0, -0.99999475, 0, -0.0032463185, -24.418894, 2.600812, -0.1930275)
+shape = SubResource("BoxShape3D_co50f")
+
+[node name="cliff4" type="StaticBody3D" parent="cliffs" unique_id=379687185]
+transform = Transform3D(0.004153911, 0, -0.99999136, 0, 1, 0, 0.99999136, 0, 0.004153911, 0, -0.47147226, 0)
+
+[node name="cliffProps1" parent="cliffs/cliff4" unique_id=1499449954 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.9999909, 0, 1, 0, -0.9999909, 0, 0.004310906, -24.6601, 0.25000095, 7.0944104)
+
+[node name="cliffProps4" parent="cliffs/cliff4" unique_id=271646643 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355797, 0, 0.9997501, 0, 1, 0, -0.9997501, 0, 0.022355797, -25.334152, 1.868227, 4.6223006)
+
+[node name="cliffProps2" parent="cliffs/cliff4" unique_id=1622979242 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.9980573, -0.9998788, -0.0155676715, 0, 0.015537429, -0.99793637, -0.062302787, -24.830048, 1.25, 8.942404)
+
+[node name="cliffProps5" parent="cliffs/cliff4" unique_id=507632826 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776885, 0, 0.9412291, 0, 1, 0, -0.9412291, 0, 0.33776885, -24.606794, 2.034079, 10.804117)
+
+[node name="cliffProps3" parent="cliffs/cliff4" unique_id=672025389 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.071462624, 0, 0.99744326, 0, 1, 0, -0.99744326, 0, -0.071462624, -24.730793, 2.1633952, 8.522422)
+
+[node name="cliffProps6" parent="cliffs/cliff4" unique_id=806343131 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.36882937, 0.065841414, 0.92716223, -0.008643939, 0.99768794, -0.067411125, -0.92945683, 0.016848864, 0.36854565, -25.1036, 1.890018, 1.3668945)
+
+[node name="cliffProps7" parent="cliffs/cliff4" unique_id=2034996029 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.587948, 2.25, 13.518621)
+
+[node name="cliffProps8" parent="cliffs/cliff4" unique_id=596191222 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.550371, 3.2570286, 7.1489124)
+
+[node name="cliffProps9" parent="cliffs/cliff4" unique_id=756272323 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.99999094, 0, 1, 0, -0.99999094, 0, 0.004310906, -24.660103, 0.25000095, -7.3114505)
+
+[node name="cliffProps10" parent="cliffs/cliff4" unique_id=226204330 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355799, 0, 0.99975014, 0, 1, 0, -0.99975014, 0, 0.022355799, -25.334154, 1.868227, -9.783562)
+
+[node name="cliffProps11" parent="cliffs/cliff4" unique_id=223271765 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.99805737, -0.9998788, -0.0155676715, 0, 0.0155374305, -0.9979364, -0.062302787, -24.83005, 1.25, -5.463457)
+
+[node name="cliffProps12" parent="cliffs/cliff4" unique_id=873593701 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776888, 0, 0.94122916, 0, 1, 0, -0.94122916, 0, 0.33776888, -24.606798, 2.034079, -3.6017432)
+
+[node name="cliffProps13" parent="cliffs/cliff4" unique_id=1519110823 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.07146263, 0, 0.9974433, 0, 1, 0, -0.9974433, 0, -0.07146263, -24.730795, 2.1633952, -5.8834386)
+
+[node name="cliffProps14" parent="cliffs/cliff4" unique_id=1098487898 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.3688294, 0.06584143, 0.9271623, -0.008643939, 0.99768794, -0.067411125, -0.9294569, 0.016848866, 0.36854568, -25.103601, 1.890018, -13.038967)
+
+[node name="cliffProps15" parent="cliffs/cliff4" unique_id=872205142 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.587952, 2.25, -0.88723916)
+
+[node name="cliffProps16" parent="cliffs/cliff4" unique_id=251097175 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.550375, 3.2570286, -7.2569485)
+
+[node name="cliffProps17" parent="cliffs/cliff4" unique_id=1744513429 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.99999094, 0, 1, 0, -0.99999094, 0, 0.004310906, -24.6601, 0.25000095, 18.33052)
+
+[node name="cliffProps18" parent="cliffs/cliff4" unique_id=1174075140 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355799, 0, 0.99975014, 0, 1, 0, -0.99975014, 0, 0.022355799, -25.334152, 1.868227, 15.85841)
+
+[node name="cliffProps19" parent="cliffs/cliff4" unique_id=2134685593 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.99805737, -0.9998788, -0.0155676715, 0, 0.0155374305, -0.9979364, -0.062302787, -24.830048, 1.25, 20.178513)
+
+[node name="cliffProps20" parent="cliffs/cliff4" unique_id=725410323 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776888, 0, 0.94122916, 0, 1, 0, -0.94122916, 0, 0.33776888, -24.606794, 2.034079, 22.040228)
+
+[node name="cliffProps21" parent="cliffs/cliff4" unique_id=607921423 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.07146263, 0, 0.9974433, 0, 1, 0, -0.9974433, 0, -0.07146263, -24.730793, 2.1633952, 19.758532)
+
+[node name="cliffProps22" parent="cliffs/cliff4" unique_id=813148414 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.3688294, 0.06584143, 0.9271623, -0.008643939, 0.99768794, -0.067411125, -0.9294569, 0.016848866, 0.36854568, -25.1036, 1.890018, 12.6030035)
+
+[node name="cliffProps23" parent="cliffs/cliff4" unique_id=420747981 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.587952, 2.25, 24.754732)
+
+[node name="cliffProps24" parent="cliffs/cliff4" unique_id=1618584 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.550373, 3.2570286, 18.385023)
+
+[node name="cliffProps25" parent="cliffs/cliff4" unique_id=2115405095 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(0.004310906, 0, 0.99999094, 0, 1, 0, -0.99999094, 0, 0.004310906, -24.6601, 0.25000095, -20.668758)
+
+[node name="cliffProps26" parent="cliffs/cliff4" unique_id=1973934152 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.022355799, 0, 0.99975014, 0, 1, 0, -0.99975014, 0, 0.022355799, -25.334152, 1.868227, -23.14087)
+
+[node name="cliffProps27" parent="cliffs/cliff4" unique_id=1715344225 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(0.0009699093, -0.062295236, 0.99805737, -0.9998788, -0.0155676715, 0, 0.0155374305, -0.9979364, -0.062302787, -24.83005, 1.25, -18.820766)
+
+[node name="cliffProps28" parent="cliffs/cliff4" unique_id=899372213 instance=ExtResource("2_dr8ba")]
+transform = Transform3D(0.33776888, 0, 0.94122916, 0, 1, 0, -0.94122916, 0, 0.33776888, -24.606798, 2.034079, -16.959053)
+
+[node name="cliffProps29" parent="cliffs/cliff4" unique_id=1962482208 instance=ExtResource("1_hgrhv")]
+transform = Transform3D(-0.07146263, 0, 0.9974433, 0, 1, 0, -0.9974433, 0, -0.07146263, -24.730795, 2.1633952, -19.240746)
+
+[node name="cliffProps30" parent="cliffs/cliff4" unique_id=922360440 instance=ExtResource("4_ysdsq")]
+transform = Transform3D(0.3688294, 0.06584143, 0.9271623, -0.008643939, 0.99768794, -0.067411125, -0.9294569, 0.016848866, 0.36854568, -25.103601, 1.890018, -26.396276)
+
+[node name="cliffProps31" parent="cliffs/cliff4" unique_id=2008661116 instance=ExtResource("5_phgsc")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.587952, 2.25, -14.244548)
+
+[node name="cliffProps32" parent="cliffs/cliff4" unique_id=1675395222 instance=ExtResource("3_v5b4n")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -24.550375, 3.2570286, -20.614256)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="cliffs/cliff4" unique_id=1565042038]
+transform = Transform3D(-0.0032463185, 0, 0.99999475, 0, 1, 0, -0.99999475, 0, -0.0032463185, -24.418894, 2.600812, -0.1930275)
+shape = SubResource("BoxShape3D_co50f")
+
+[node name="floor" type="StaticBody3D" parent="." unique_id=2028835790]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4687538, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor" unique_id=1591456417]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.3817377, 0)
+shape = SubResource("BoxShape3D_rg7ok")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor" unique_id=986436439]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.7437923, 0)
+material_override = SubResource("StandardMaterial3D_pvi7j")
+mesh = SubResource("QuadMesh_5wjeq")
+
+[node name="trees" type="Node" parent="." unique_id=979645734]
+
+[node name="tree" parent="trees" unique_id=1208460824 instance=ExtResource("6_a2svu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.897011, 0, -16.815804)
+
+[node name="tree2" parent="trees" unique_id=1747801889 instance=ExtResource("6_a2svu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.533647, 0.25, -4.0646706)
+
+[node name="tree3" parent="trees" unique_id=2004211096 instance=ExtResource("6_a2svu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.887901, 0.25, 16.221308)
+
+[node name="tree4" parent="trees" unique_id=768217015 instance=ExtResource("6_a2svu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.398325, 0.25, 5.8292503)
+
+[node name="tree5" parent="trees" unique_id=718578843 instance=ExtResource("6_a2svu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.617526, 0.25, 16.12188)
+
+[node name="tree6" parent="trees" unique_id=1101768490 instance=ExtResource("6_a2svu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.615323, 0.2499981, 5.7156963)
+
+[node name="Taverns" type="Node" parent="." unique_id=663951217]
+
+[node name="tavern" parent="Taverns" unique_id=1318807479 instance=ExtResource("7_emu1g")]
+transform = Transform3D(-0.0008027926, 0, 0.99999964, 0, 1, 0, -0.99999964, 0, -0.0008027926, -15.69, 0.85, -16.161)
+
+[node name="Interior" parent="Taverns" unique_id=1494118451 instance=ExtResource("8_hvdyd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18.842949)
+
+[node name="player" parent="." unique_id=508285439 instance=ExtResource("9_dr8ba")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3376956, 0.8657625, 19.168978)
+
+[node name="door1" parent="." unique_id=1935324944 instance=ExtResource("9_v5b4n")]
+transform = Transform3D(-0.005061403, 0, 0.99998724, 0, 1, 0, -0.99998724, 0, -0.005061403, 2.3059213, 0.8567157, 20.57858)
+destination = "house_1_door_1"
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=406599921]
+transform = Transform3D(0.9994582, -0.0030661027, 0.03277188, -0.03262862, 0.038763642, 0.9987155, -0.004332522, -0.99924374, 0.038642593, -0.6265745, 21.624422, 15.885866)
+light_energy = 4.01
+light_indirect_energy = 2.109
+light_volumetric_fog_energy = 1.95
+shadow_enabled = true
+shadow_normal_bias = 0.416

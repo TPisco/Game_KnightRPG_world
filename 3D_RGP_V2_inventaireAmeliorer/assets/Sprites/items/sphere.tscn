@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bdtjd2v0hpe17"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_4crqt"]
+
+[node name="Sphere" type="Node3D" unique_id=1801132503]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1012568223]
+transform = Transform3D(0.471379, 0, 0, 0, 0.471379, 0, 0, 0, 0.471379, 0, 0, 0)
+mesh = SubResource("SphereMesh_4crqt")
