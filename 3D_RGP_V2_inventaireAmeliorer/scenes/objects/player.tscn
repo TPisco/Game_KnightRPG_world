@@ -12,7 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://g3ufkjgyjbhl" path="res://scenes/Items/TestSphere.tscn" id="9_dunks"]
 [ext_resource type="Texture2D" uid="uid://dmm2hx7m8xjq5" path="res://assets/Textures/SphereIcon.png" id="10_68atb"]
 [ext_resource type="Texture2D" uid="uid://bl2fquf4vrwwh" path="res://assets/Textures/SwordIcon.png" id="11_2lybl"]
-[ext_resource type="Script" uid="uid://do2qk68rcf51f" path="res://scenes/Inventory/InventoryHandler.gd" id="11_dunks"]
+[ext_resource type="Script" path="res://systems/InventoryManager.gd" id="11_dunks"]
+[ext_resource type="Script" path="res://systems/SkillSystem.gd" id="19_skill"]
 [ext_resource type="PackedScene" uid="uid://dxmxnd04lqyr2" path="res://scenes/Items/sword.tscn" id="12_6uaar"]
 [ext_resource type="PackedScene" uid="uid://bdtjd2v0hpe17" path="res://assets/Sprites/items/sphere.tscn" id="12_jfdn7"]
 [ext_resource type="Texture2D" uid="uid://c5ck8v7p17y7a" path="res://assets/Textures/torch.png" id="13_2iaiu"]
@@ -218,6 +219,9 @@ libraries/ = SubResource("AnimationLibrary_nmc1l")
 [node name="AttackCoolDown" type="Timer" parent="." unique_id=754376697]
 wait_time = 0.4
 
+[node name="SkillSystem" type="Node" parent="."]
+script = ExtResource("19_skill")
+
 [node name="HUD" type="CanvasLayer" parent="." unique_id=233016677]
 
 [node name="HpBar" type="TextureProgressBar" parent="HUD" unique_id=95519875]
@@ -235,6 +239,22 @@ offset_right = 1113.0
 offset_bottom = 621.0
 theme_type_variation = &"HeaderMedium"
 text = "0"
+
+[node name="LevelLabel" type="Label" parent="HUD"]
+offset_left = 47.0
+offset_top = 75.0
+offset_right = 300.0
+offset_bottom = 105.0
+theme_override_font_sizes/font_size = 18
+text = "Lv.1"
+
+[node name="StaminaBar" type="ProgressBar" parent="HUD"]
+offset_left = 47.0
+offset_top = 108.0
+offset_right = 286.0
+offset_bottom = 128.0
+max_value = 50.0
+show_percentage = false
 
 [node name="attackZone" type="Area3D" parent="." unique_id=526778820]
 
@@ -283,14 +303,30 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -65.0
+offset_left = -140.0
 offset_top = -137.0
-offset_right = 65.0
+offset_right = -10.0
 offset_bottom = -90.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 28
-text = "Respawn"
+text = "Retry Run"
+
+[node name="MenuBtn" type="Button" parent="deathScreen/ColorRect"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -137.0
+offset_right = 140.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 28
+text = "Main Menu"
 
 [node name="InteractbleZone" type="Area3D" parent="." unique_id=504841154]
 collision_layer = 0
@@ -352,6 +388,7 @@ columns = 5
 [connection signal="body_entered" from="attackZone" to="." method="_on_attack_zone_body_entered"]
 [connection signal="body_exited" from="attackZone" to="." method="_on_attack_zone_body_exited"]
 [connection signal="pressed" from="deathScreen/ColorRect/Respawn" to="." method="_on_respawn_pressed"]
+[connection signal="pressed" from="deathScreen/ColorRect/MenuBtn" to="." method="_on_menu_pressed"]
 [connection signal="OnItemPickedUp" from="InteractbleZone" to="InventoryUI" method="pickupItem"]
 [connection signal="body_entered" from="InteractbleZone" to="InteractbleZone" method="_on_body_entered"]
 [connection signal="body_exited" from="InteractbleZone" to="InteractbleZone" method="_on_body_exited"]

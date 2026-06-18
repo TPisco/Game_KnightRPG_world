@@ -10,15 +10,17 @@ config_version=5
 
 [application]
 
-config/name="3D_RPG_V2_inventaireAmeliorer"
-run/main_scene="uid://dbi5bj5duneix"
+config/name="KnightRPG: Fractured Worlds"
+run/main_scene="uid://c8mainmenu001"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 Global="*uid://wmdqcbxcadgk"
-Ambiance="*uid://bp85o5nsu2k6s"
+ProgressionTracker="*res://systems/ProgressionTracker.gd"
+StoryManager="*res://systems/StoryManager.gd"
+SkillSystemGlobal="*res://systems/SkillSystemGlobal.gd"
 
 [display]
 
@@ -89,6 +91,16 @@ interact={
 inventory={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":73,"key_label":0,"unicode":105,"location":0,"echo":false,"script":null)
+]
+}
+skill={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":81,"key_label":0,"unicode":113,"location":0,"echo":false,"script":null)
+]
+}
+skill_menu={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":75,"key_label":0,"unicode":107,"location":0,"echo":false,"script":null)
 ]
 }
 

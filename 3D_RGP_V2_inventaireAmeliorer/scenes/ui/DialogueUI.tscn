@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://uvm87kbplrb5"]
+
+[ext_resource type="Script" path="res://scenes/ui/DialogueUI.gd" id="1_dlg"]
+
+[node name="DialogueUI" type="CanvasLayer"]
+layer = 20
+process_mode = 3
+script = ExtResource("1_dlg")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -420.0
+offset_top = -180.0
+offset_right = 420.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="SpeakerLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 12.0
+offset_right = 400.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(1, 0.75, 0.4, 1)
+theme_override_font_sizes/font_size = 20
+text = "Speaker"
+
+[node name="TextLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 44.0
+offset_right = 800.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 18
+text = "Dialogue text..."
+autowrap_mode = 3
+
+[node name="ContinueHint" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 125.0
+offset_right = 400.0
+offset_bottom = 145.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "[ Click or Enter to continue ]"

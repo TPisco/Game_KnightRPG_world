@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://ba81hdr8a73n5"]
+
+[ext_resource type="Script" path="res://scenes/ui/RunStoryHUD.gd" id="1_hud"]
+
+[node name="RunStoryHUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 20.0
+offset_top = 100.0
+offset_right = 520.0
+offset_bottom = 210.0
+
+[node name="RealmLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = 480.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 22
+text = "Fractured Wastes"
+
+[node name="HintLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 42.0
+offset_right = 480.0
+offset_bottom = 90.0
+autowrap_mode = 3
+text = "Find the guardians. Each defeat reveals another rift."
+
+[node name="BossLabel" type="Label" parent="Panel"]
+visible = false
+layout_mode = 0
+offset_left = 12.0
+offset_top = 95.0
+offset_right = 480.0
+offset_bottom = 125.0
+theme_override_colors/font_color = Color(1, 0.6, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "Boss approaching!"

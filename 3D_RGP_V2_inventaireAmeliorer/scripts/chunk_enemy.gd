@@ -1,20 +1,21 @@
-#enemy
+## Lightweight procedural enemy — no NavMesh bake required.
 extends CharacterBody3D
 
 enum states {attack, idle, chase, die}
 
 var state = states.idle
 var hp = 20
-var speed = 2
-var accel = 10
+var speed = 2.0
+var accel = 10.0
 var gravity = 9.8
 var target = null
-var damage = 20
-var value = 15
+var damage = 15
+var value = 10
 var _xp_given: bool = false
+var _gold_given: bool = false
+var _attack_cd: float = 0.0
 
-@export var navAgent: NavigationAgent3D
-@export var animationPlayer: AnimationPlayer
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 
 func enemy() -> void:
@@ -35,32 +36,39 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
-	if state == states.idle:
-		velocity = Vector3(0, velocity.y, 0)
-		if animationPlayer:
-			animationPlayer.play("Idle")
-	elif state == states.chase:
-		if target:
-			look_at(Vector3(target.global_position.x, target.global_position.y, target.global_position.z), Vector3.UP, true)
-			navAgent.target_position = target.global_position
-			var direction: Vector3 = navAgent.get_next_path_position() - global_position
-			if direction.length() < 0.1:
-				direction = target.global_position - global_position
-			direction.y = 0.0
-			direction = direction.normalized()
-			velocity = velocity.lerp(direction * speed, accel * delta)
-		if animationPlayer:
-			animationPlayer.play("Walk")
-	elif state == states.attack:
-		if target:
-			look_at(Vector3(target.global_position.x, target.global_position.y, target.global_position.z), Vector3.UP, true)
-		if animationPlayer:
-			animationPlayer.play("Punch")
-		velocity = Vector3.ZERO
-	elif state == states.die:
-		if animationPlayer:
-			animationPlayer.play("Die")
-		velocity = Vector3.ZERO
+	match state:
+		states.idle:
+			velocity.x = 0.0
+			velocity.z = 0.0
+			if animation_player:
+				animation_player.play("Idle")
+		states.chase:
+			if target:
+				look_at(Vector3(target.global_position.x, global_position.y, target.global_position.z), Vector3.UP, true)
+				var direction: Vector3 = target.global_position - global_position
+				direction.y = 0.0
+				direction = direction.normalized()
+				velocity.x = lerp(velocity.x, direction.x * speed, accel * delta)
+				velocity.z = lerp(velocity.z, direction.z * speed, accel * delta)
+			if animation_player:
+				animation_player.play("Walk")
+		states.attack:
+			if target:
+				look_at(Vector3(target.global_position.x, global_position.y, target.global_position.z), Vector3.UP, true)
+			velocity = Vector3.ZERO
+			_attack_cd -= delta
+			if _attack_cd <= 0.0 and target:
+				attack()
+				_attack_cd = 1.2
+			if animation_player:
+				animation_player.play("Punch")
+		states.die:
+			velocity = Vector3.ZERO
+			if not _gold_given:
+				_gold_given = true
+				give_Gold()
+			if animation_player:
+				animation_player.play("Die")
 
 	move_and_slide()
 
@@ -77,6 +85,10 @@ func attack() -> void:
 	else:
 		target.hp -= damage
 	target._updateHUD()
+
+
+func show_damage_number(amount: int) -> void:
+	CombatFeedback.spawn_damage_number(global_position + Vector3(0, 1.5, 0), amount, Color(1.0, 0.85, 0.3))
 
 
 func give_Gold() -> void:

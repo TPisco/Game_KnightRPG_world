@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://c8sharditem01"]
+
+[ext_resource type="Script" path="res://scenes/Items/WorldLootPickup.gd" id="1_loot"]
+[ext_resource type="Script" path="res://scenes/Inventory/ItemData.gd" id="2_data"]
+[ext_resource type="Texture2D" path="res://assets/Textures/SphereIcon.png" id="3_icon"]
+
+[sub_resource type="Resource" id="Resource_shard"]
+script = ExtResource("2_data")
+ItemName = "FracturedShard"
+Icon = ExtResource("3_icon")
+item_type = "artifact"
+stat_bonuses = {
+"damage": 3,
+"max_hp": 10
+}
+
+[sub_resource type="BoxMesh" id="BoxMesh_shard"]
+size = Vector3(0.4, 0.4, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shard"]
+albedo_color = Color(0.6, 0.2, 0.9, 1)
+emission_enabled = true
+emission = Color(0.5, 0.1, 0.8, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shard"]
+size = Vector3(0.8, 0.8, 0.8)
+
+[node name="FracturedShard" type="Area3D"]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_loot")
+loot_data = SubResource("Resource_shard")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_shard")
+surface_material_override/0 = SubResource("StandardMaterial3D_shard")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_shard")

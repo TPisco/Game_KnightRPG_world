@@ -1,0 +1,69 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8skillselect1"]
+
+[ext_resource type="Script" path="res://scenes/ui/SkillSelectionUI.gd" id="1_skillui"]
+
+[node name="SkillSelectionUI" type="CanvasLayer"]
+script = ExtResource("1_skillui")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -280.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 400.0
+grow_horizontal = 0
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Panel/Margin/VBox"]
+layout_mode = 2
+text = "Skills & Build (K)"
+
+[node name="BuildOption" type="OptionButton" parent="Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="SkillList" type="ItemList" parent="Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatsLabel" type="Label" parent="Panel/Margin/VBox"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="StatButtons" type="HBoxContainer" parent="Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StrBtn" type="Button" parent="Panel/Margin/VBox/StatButtons"]
+layout_mode = 2
+text = "+ STR"
+
+[node name="MagBtn" type="Button" parent="Panel/Margin/VBox/StatButtons"]
+layout_mode = 2
+text = "+ MAG"
+
+[node name="DefBtn" type="Button" parent="Panel/Margin/VBox/StatButtons"]
+layout_mode = 2
+text = "+ DEF"
+
+[node name="PassivesLabel" type="Label" parent="Panel/Margin/VBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Passives: none yet"

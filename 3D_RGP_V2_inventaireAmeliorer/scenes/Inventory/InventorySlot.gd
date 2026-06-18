@@ -23,9 +23,21 @@ func FillSlot(data : ItemData, equipped : bool):
 	if (SlotData != null):
 		SlotFilled = true
 		IconSlot.texture = data.Icon
+		tooltip_text = _build_tooltip(data)
 	else:
 		SlotFilled = false
 		IconSlot.texture = null
+		tooltip_text = ""
+
+
+func _build_tooltip(data: ItemData) -> String:
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append(data.ItemName)
+	if data.item_type != "":
+		lines.append("Type: " + data.item_type)
+	for key in data.stat_bonuses:
+		lines.append("%s: +%s" % [key, str(data.stat_bonuses[key])])
+	return "\n".join(lines)
 
 func _get_drag_data(at_position: Vector2) -> Variant:
 	if (SlotFilled):
