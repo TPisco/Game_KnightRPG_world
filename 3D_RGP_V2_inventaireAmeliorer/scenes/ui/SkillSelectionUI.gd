@@ -52,16 +52,24 @@ func _refresh() -> void:
 	if skill_list == null or stats_label == null:
 		return
 	skill_list.clear()
-	for skill_id in ProgressionTracker.unlocked_skills:
-		var def: Dictionary = ProgressionTracker.SKILL_DEFS.get(skill_id, {})
-		if def.is_empty():
-			continue
-		if skill_id != "power_slash" and def.get("path", "") != ProgressionTracker.build_path:
-			if skill_id != "life_drain" or ProgressionTracker.build_path != "hybrid":
+	var skills_to_show: Array[String] = []
+	if Global.hub_test_mode:
+		for skill_id in ProgressionTracker.SKILL_DEFS:
+			skills_to_show.append(skill_id)
+	else:
+		for skill_id in ProgressionTracker.unlocked_skills:
+			var def: Dictionary = ProgressionTracker.SKILL_DEFS.get(skill_id, {})
+			if def.is_empty():
 				continue
+			if skill_id != "power_slash" and def.get("path", "") != ProgressionTracker.build_path:
+				if skill_id != "life_drain" or ProgressionTracker.build_path != "hybrid":
+					continue
+			skills_to_show.append(skill_id)
+	for skill_id in skills_to_show:
 		var idx := skill_list.add_item(skill_id.replace("_", " ").capitalize())
 		skill_list.set_item_metadata(idx, skill_id)
-	stats_label.text = "Lv %d  XP %d/%d\nSTR %d  MAG %d  DEF %d\nPoints: %d" % [
+	var mode_hint := "\n[TEST MODE — all builds & skills]" if Global.hub_test_mode else ""
+	stats_label.text = "Lv %d  XP %d/%d\nSTR %d  MAG %d  DEF %d\nPoints: %d%s" % [
 		ProgressionTracker.level,
 		ProgressionTracker.xp,
 		ProgressionTracker.xp_to_next,
@@ -69,6 +77,7 @@ func _refresh() -> void:
 		ProgressionTracker.magic,
 		ProgressionTracker.defense,
 		ProgressionTracker.stat_points,
+		mode_hint,
 	]
 	if passives_label:
 		var passives: Array[String] = ProgressionTracker.get_passive_list()

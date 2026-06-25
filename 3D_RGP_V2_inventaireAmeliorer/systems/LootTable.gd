@@ -68,7 +68,23 @@ static func healing_vial() -> ItemData:
 	return item
 
 
+## Skill tome: picking it up unlocks the given power (no inventory slot used).
+static func skill_tome(skill_id: String) -> ItemData:
+	var item := ItemData.new()
+	item.ItemName = "Tome of %s" % skill_id.capitalize()
+	item.Icon = ICON_SPHERE
+	item.item_type = "tome"
+	item.unlock_skill = skill_id
+	return item
+
+
+const SKILL_TOMES := ["arcane_bolt", "iron_wall", "life_drain"]
+
+
 static func roll_loot(depth: int, rng: RandomNumberGenerator) -> ItemData:
+	# Rare chance for a skill tome that unlocks a power on pickup.
+	if depth >= 2 and rng.randf() < 0.08:
+		return skill_tome(SKILL_TOMES[rng.randi() % SKILL_TOMES.size()])
 	var roll := rng.randf()
 	if depth <= 1:
 		if roll < 0.35:

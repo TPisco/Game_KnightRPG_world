@@ -12,6 +12,7 @@ const BOSS_MILESTONES := [5, 12, 20]
 
 signal chunk_spawned(chunk_node: Node)
 signal chunk_unloaded(chunk_node: Node)
+signal cave_portal_entered(portals_cleared: int)
 
 var world_seed: int = 0
 var difficulty_multiplier: float = 1.0
@@ -27,13 +28,13 @@ var _chunks_loading: bool = false
 func _ready() -> void:
 	if Global.continue_run:
 		ProgressionTracker.load_game()
-		world_seed = ProgressionTracker.run_seed
+		world_seed = ProgressionTracker.run_seed + ProgressionTracker.cave_portals_cleared * 10007
 		Global.continue_run = false
 	elif ProgressionTracker.run_seed == 0:
 		ProgressionTracker.start_new_run()
 		world_seed = ProgressionTracker.run_seed
 	else:
-		world_seed = ProgressionTracker.run_seed
+		world_seed = ProgressionTracker.run_seed + ProgressionTracker.cave_portals_cleared * 10007
 
 	_spawn_player()
 	_bind_skill_ui()
@@ -74,7 +75,7 @@ func _spawn_player() -> void:
 		spawn_pos = (spawn as Node3D).global_position
 	var spawn_chunk := _world_to_chunk(spawn_pos)
 	var noise := FastNoiseLite.new()
-	noise.seed = world_seed + spawn_chunk.x * 928371 + spawn_chunk.y * 689287
+	noise.seed = world_seed
 	noise.frequency = 0.04
 	noise.fractal_octaves = 3
 	var terrain_h := noise.get_noise_2d(spawn_pos.x, spawn_pos.z) * 3.0
@@ -254,7 +255,7 @@ func _spawn_boss(milestone: int) -> void:
 	boss.global_position = _player.global_position + offset
 	var chunk := _world_to_chunk(boss.global_position)
 	var noise := FastNoiseLite.new()
-	noise.seed = world_seed + chunk.x * 928371 + chunk.y * 689287
+	noise.seed = world_seed
 	noise.frequency = 0.04
 	noise.fractal_octaves = 3
 	var h := noise.get_noise_2d(boss.global_position.x, boss.global_position.z) * 3.0
@@ -263,3 +264,40 @@ func _spawn_boss(milestone: int) -> void:
 	var boss_ui = get_tree().current_scene.get_node_or_null("BossUI")
 	if boss_ui and boss_ui.has_method("register_boss"):
 		boss_ui.register_boss(boss)
+
+
+func enter_cave_portal(_portal: Node) -> void:
+	if not is_instance_valid(_player):
+		return
+
+	ProgressionTracker.cave_portals_cleared += 1
+	ProgressionTracker.update_run_depth(ProgressionTracker.run_depth + 3)
+	ProgressionTracker.save_game()
+
+	var advance := float((LOAD_RANGE + 2) * CHUNK_SIZE)
+	_player.global_position += Vector3(0.0, 0.0, advance)
+	world_seed = ProgressionTracker.run_seed + ProgressionTracker.cave_portals_cleared * 10007
+	_place_player_on_terrain()
+
+	for key in active_chunks.keys():
+		var chunk_node: Node = active_chunks[key]
+		chunk_unloaded.emit(chunk_node)
+		chunk_node.queue_free()
+	active_chunks.clear()
+
+	_last_player_chunk = _world_to_chunk(_player.global_position)
+	call_deferred("_refresh_chunks_async")
+	cave_portal_entered.emit(ProgressionTracker.cave_portals_cleared)
+	StoryManager.trigger_cave_portal()
+	print("Entered cave portal — advanced to realm %d" % ProgressionTracker.cave_portals_cleared)
+
+
+func _place_player_on_terrain() -> void:
+	if not is_instance_valid(_player):
+		return
+	var noise := FastNoiseLite.new()
+	noise.seed = world_seed
+	noise.frequency = 0.04
+	noise.fractal_octaves = 3
+	var h := noise.get_noise_2d(_player.global_position.x, _player.global_position.z) * 3.0
+	_player.global_position.y = h + 2.0

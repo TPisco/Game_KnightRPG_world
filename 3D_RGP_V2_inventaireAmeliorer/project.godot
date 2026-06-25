@@ -21,6 +21,7 @@ Global="*uid://wmdqcbxcadgk"
 ProgressionTracker="*res://systems/ProgressionTracker.gd"
 StoryManager="*res://systems/StoryManager.gd"
 SkillSystemGlobal="*res://systems/SkillSystemGlobal.gd"
+SoundManager="*res://systems/SoundManager.gd"
 
 [display]
 

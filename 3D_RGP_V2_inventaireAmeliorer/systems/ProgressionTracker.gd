@@ -26,6 +26,7 @@ var unlocked_passives: Array[String] = []
 # --- Per-run (reset when a new run starts) ---
 var run_depth: int = 0
 var run_seed: int = 0
+var cave_portals_cleared: int = 0
 var temp_buffs: Dictionary = {}
 
 const SKILL_DEFS := {
@@ -58,6 +59,7 @@ func start_new_run(use_existing_seed: bool = false) -> void:
 	if not use_existing_seed or run_seed == 0:
 		run_seed = randi()
 	run_depth = 0
+	cave_portals_cleared = 0
 	temp_buffs.clear()
 	total_runs += 1
 	_check_skill_unlocks()
@@ -78,6 +80,8 @@ func add_xp(amount: int) -> void:
 		level_up.emit(level)
 		_check_skill_unlocks()
 		_check_passive_unlocks()
+		if Engine.has_singleton("SoundManager") or has_node("/root/SoundManager"):
+			get_node("/root/SoundManager").play("level")
 	save_game()
 
 
@@ -117,6 +121,16 @@ func is_skill_unlocked(skill_id: String) -> bool:
 
 func refresh_skill_unlocks() -> void:
 	_check_skill_unlocks()
+
+
+## Unlock a skill directly (e.g. from finding a skill tome). Returns true if newly unlocked.
+func unlock_skill(skill_id: String) -> bool:
+	if skill_id == "" or skill_id in unlocked_skills:
+		return false
+	unlocked_skills.append(skill_id)
+	skill_unlocked.emit(skill_id)
+	save_game()
+	return true
 
 
 func get_player_stats(equipment_bonuses: Dictionary = {}) -> Dictionary:
@@ -170,6 +184,7 @@ func save_game() -> void:
 		"story_seen": story_seen,
 		"run_seed": run_seed,
 		"run_depth": run_depth,
+		"cave_portals_cleared": cave_portals_cleared,
 		"mouse_sensitivity": mouse_sensitivity,
 		"unlocked_passives": unlocked_passives,
 	}
@@ -207,6 +222,7 @@ func load_game() -> bool:
 	story_seen = parsed.get("story_seen", false)
 	run_seed = parsed.get("run_seed", 0)
 	run_depth = parsed.get("run_depth", 0)
+	cave_portals_cleared = parsed.get("cave_portals_cleared", 0)
 	mouse_sensitivity = parsed.get("mouse_sensitivity", 0.003)
 	unlocked_passives.clear()
 	var saved_passives = parsed.get("unlocked_passives", [])

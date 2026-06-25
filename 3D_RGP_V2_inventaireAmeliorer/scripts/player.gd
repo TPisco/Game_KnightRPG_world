@@ -1,2 +1,2 @@
 ## Backward-compatible alias — knight logic lives in KnightController.gd
-extends KnightController
+extends "res://scripts/KnightController.gd"

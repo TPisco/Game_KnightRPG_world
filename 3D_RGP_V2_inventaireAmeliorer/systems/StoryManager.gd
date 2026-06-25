@@ -20,6 +20,12 @@ const STORY_BEATS: Dictionary = {
 	"world_change": [
 		{"speaker": "The Rift", "text": "A new fractured realm unfolds. The danger escalates with every step."},
 	],
+	"cave_portal": [
+		{"speaker": "The Rift", "text": "The guardian falls. A portal opens deeper into the fractured multiverse."},
+	],
+	"skill_unlocked": [
+		{"speaker": "Ancient Knowledge", "text": "A forgotten power surges through you. A new skill is yours to wield."},
+	],
 	"boss_defeat": [
 		{"speaker": "Ancient Being", "text": "You have conquered me... but the path remains hidden in deeper rifts."},
 	],
@@ -81,6 +87,10 @@ func trigger_intro() -> void:
 
 func trigger_world_change(_world_index: int = 0) -> void:
 	await trigger_story_event("world_change")
+
+
+func trigger_cave_portal() -> void:
+	await trigger_story_event("cave_portal")
 
 
 func trigger_boss_defeat(boss_name: String = "") -> void:

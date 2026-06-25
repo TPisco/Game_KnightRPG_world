@@ -5,6 +5,8 @@ var node_position: String = ""
 var rotation: float = -90.0
 var current_realm: String = "fractured_wastes"
 var continue_run: bool = false
+var hub_test_mode: bool = false
+var hub_test_applied: bool = false
 
 var player_node = null
 
@@ -15,6 +17,8 @@ func set_player_reference(player) -> void:
 
 func start_new_run() -> void:
 	continue_run = false
+	hub_test_mode = false
+	hub_test_applied = false
 	ProgressionTracker.start_new_run()
 
 

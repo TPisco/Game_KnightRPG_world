@@ -1,4 +1,4 @@
-#enemy
+#enemy — base FSM; death handled by EnemyDeathSystem (same as goblin flow).
 extends CharacterBody3D
 
 enum states {attack, idle, chase, die}
@@ -11,10 +11,11 @@ var gravity = 9.8
 var target = null
 var damage = 20
 var value = 15
-var _xp_given: bool = false
 
 @export var navAgent: NavigationAgent3D
 @export var animationPlayer: AnimationPlayer
+
+var _death_system: EnemyDeathSystem
 
 
 func enemy() -> void:
@@ -23,15 +24,49 @@ func enemy() -> void:
 
 func _ready() -> void:
 	add_to_group("enemies")
+	_setup_death_system()
+
+
+func _setup_death_system() -> void:
+	_death_system = get_node_or_null("EnemyDeathSystem") as EnemyDeathSystem
+	if _death_system == null:
+		_death_system = EnemyDeathSystem.new()
+		_death_system.name = "EnemyDeathSystem"
+		add_child(_death_system)
+	_death_system.setup(self, animationPlayer)
+
+
+func show_damage_number(amount: int) -> void:
+	CombatFeedback.spawn_damage_number(global_position + Vector3(0, 1.5, 0), amount, Color(1.0, 0.85, 0.3))
+
+
+func take_damage(amount: int) -> void:
+	if state == states.die:
+		return
+	hp -= amount
+	show_damage_number(amount)
+	if hp <= 0:
+		_enter_death_state()
+
+
+func _enter_death_state() -> void:
+	if state == states.die:
+		return
+	state = states.die
+	_death_system.begin_death()
 
 
 func _process(_delta: float) -> void:
-	if hp <= 0:
-		state = states.die
-		_award_xp_once()
+	if hp <= 0 and state != states.die:
+		_enter_death_state()
 
 
 func _physics_process(delta: float) -> void:
+	if state == states.die:
+		velocity = Vector3.ZERO
+		move_and_slide()
+		return
+
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
@@ -57,10 +92,6 @@ func _physics_process(delta: float) -> void:
 		if animationPlayer:
 			animationPlayer.play("Punch")
 		velocity = Vector3.ZERO
-	elif state == states.die:
-		if animationPlayer:
-			animationPlayer.play("Die")
-		velocity = Vector3.ZERO
 
 	move_and_slide()
 
@@ -83,13 +114,6 @@ func give_Gold() -> void:
 	if target:
 		target.gold += value
 		target._updateHUD()
-
-
-func _award_xp_once() -> void:
-	if _xp_given:
-		return
-	_xp_given = true
-	ProgressionTracker.add_xp(value)
 
 
 func _on_chase_area_body_entered(body: Node3D) -> void:

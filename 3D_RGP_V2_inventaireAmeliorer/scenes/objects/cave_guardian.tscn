@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://c6gntb42vtr41"]
+
+[ext_resource type="Script" path="res://scripts/CaveGuardian.gd" id="1_guardian"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_guardian"]
+radius = 0.55
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_guardian"]
+radius = 0.55
+height = 1.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_guardian"]
+albedo_color = Color(0.92, 0.1, 0.08, 1)
+emission_enabled = true
+emission = Color(0.55, 0.05, 0.05, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "Idle"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "Walk"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_punch"]
+resource_name = "Punch"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_die"]
+resource_name = "Die"
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_guardian"]
+_data = {
+"Die": SubResource("Animation_die"),
+"Idle": SubResource("Animation_idle"),
+"Punch": SubResource("Animation_punch"),
+"Walk": SubResource("Animation_walk")
+}
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_chase"]
+height = 3.0
+radius = 15.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_attack"]
+height = 3.0
+radius = 2.5
+
+[node name="CaveGuardian" type="CharacterBody3D"]
+script = ExtResource("1_guardian")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_guardian")
+surface_material_override/0 = SubResource("StandardMaterial3D_guardian")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_guardian")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_guardian")
+}
+
+[node name="ChaseArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ChaseArea"]
+shape = SubResource("CylinderShape3D_chase")
+
+[node name="AttackArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+shape = SubResource("CylinderShape3D_attack")
+
+[connection signal="body_entered" from="ChaseArea" to="." method="_on_chase_area_body_entered"]
+[connection signal="body_exited" from="ChaseArea" to="." method="_on_chase_area_body_exited"]
+[connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
+[connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]

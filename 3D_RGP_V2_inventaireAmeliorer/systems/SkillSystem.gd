@@ -54,8 +54,19 @@ func _process(delta: float) -> void:
 
 
 func set_active_skill(skill_id: String) -> void:
-	if ProgressionTracker.is_skill_unlocked(skill_id):
+	if Global.hub_test_mode or ProgressionTracker.is_skill_unlocked(skill_id):
 		active_skill = skill_id
+
+
+func grant_all_skills() -> void:
+	for entry in SKILL_DATABASE:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var skill_id: String = entry.get("id", "")
+		if skill_id != "" and skill_id not in ProgressionTracker.unlocked_skills:
+			ProgressionTracker.unlocked_skills.append(skill_id)
+	if active_skill == "" and ProgressionTracker.unlocked_skills.size() > 0:
+		active_skill = ProgressionTracker.unlocked_skills[0]
 
 
 func is_on_cooldown(skill_id: String = "") -> bool:
@@ -71,12 +82,12 @@ func get_cooldown_remaining(skill_id: String = "") -> float:
 func activate_skill() -> bool:
 	if not _player or active_skill == "":
 		return false
-	if not ProgressionTracker.is_skill_unlocked(active_skill):
+	if not Global.hub_test_mode and not ProgressionTracker.is_skill_unlocked(active_skill):
 		return false
 	if is_on_cooldown():
 		return false
-	var stamina_cost: float = SKILL_STAMINA_COSTS.get(active_skill, 20.0)
-	if _player.has_method("spend_stamina") and not _player.spend_stamina(stamina_cost):
+	var stamina_cost: float = 0.0 if Global.hub_test_mode else SKILL_STAMINA_COSTS.get(active_skill, 20.0)
+	if stamina_cost > 0.0 and _player.has_method("spend_stamina") and not _player.spend_stamina(stamina_cost):
 		return false
 
 	match active_skill:
@@ -92,6 +103,7 @@ func activate_skill() -> bool:
 			return false
 
 	_start_cooldown(active_skill)
+	SoundManager.play("skill")
 	skill_activated.emit(active_skill)
 	return true
 
@@ -107,6 +119,8 @@ func handle_guard_input(pressed: bool) -> bool:
 
 func _start_cooldown(skill_id: String) -> void:
 	var base_cd: float = SKILL_COOLDOWNS.get(skill_id, 5.0)
+	if Global.hub_test_mode:
+		base_cd *= 0.25
 	var mult: float = ProgressionTracker.get_player_stats().get("skill_cooldown_mult", 1.0)
 	_cooldowns[skill_id] = base_cd * mult
 
@@ -120,13 +134,31 @@ func _use_power_slash() -> void:
 
 
 func _use_arcane_bolt() -> void:
+	var cam := _get_aim_camera()
+	if cam == null:
+		return
 	var bolt := ARCANE_BOLT_SCENE.instantiate()
 	_player.get_parent().add_child(bolt)
-	var forward := -_player.global_transform.basis.z
-	bolt.global_position = _player.global_position + Vector3(0, 1.2, 0)
+	var forward := -cam.global_transform.basis.z.normalized()
+	var spawn_pos := cam.global_position + forward * 0.75
+	bolt.global_position = spawn_pos
+	if bolt is Node3D:
+		(bolt as Node3D).look_at(spawn_pos + forward, Vector3.UP)
 	if bolt.has_method("launch"):
 		var stats: Dictionary = ProgressionTracker.get_player_stats()
 		bolt.launch(forward, int(stats["damage"] * 1.5))
+
+
+func _get_aim_camera() -> Camera3D:
+	if _player == null:
+		return null
+	var first := _player.get_node_or_null("FirstPov") as Camera3D
+	var third := _player.get_node_or_null("Head/ThirdPov") as Camera3D
+	if third and third.current:
+		return third
+	if first and first.current:
+		return first
+	return first if first else third
 
 
 func _use_iron_wall() -> void:
@@ -151,7 +183,10 @@ func _damage_enemies_in_radius(radius: float, damage: int) -> int:
 			continue
 		if node.global_position.distance_to(_player.global_position) > radius:
 			continue
-		if "hp" in node and node.hp > 0:
+		if node.has_method("take_damage"):
+			node.take_damage(damage)
+			total_heal += int(damage * 0.25)
+		elif "hp" in node and node.hp > 0:
 			node.hp -= damage
 			total_heal += int(damage * 0.25)
 	return total_heal

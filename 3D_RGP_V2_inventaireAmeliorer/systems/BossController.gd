@@ -5,9 +5,12 @@ extends "res://scripts/enemy.gd"
 signal phase_changed(phase: int)
 signal boss_defeated
 
+const PORTAL_SCENE := preload("res://scenes/world/cave_portal.tscn")
+
 @export var boss_name: String = "Fractured Guardian"
 @export var phase_thresholds: Array[float] = [0.66, 0.33]
 @export var loot_item: ItemData
+@export var spawns_portal_on_death: bool = true
 
 var max_hp: int = 200
 var current_phase: int = 1
@@ -16,22 +19,19 @@ var _attack_cd: float = 0.0
 
 
 func _ready() -> void:
+	super._ready()
 	max_hp = hp
-	add_to_group("enemies")
 	add_to_group("bosses")
-
-
-func enemy() -> void:
-	pass
-
-
-func _process(_delta: float) -> void:
-	if hp <= 0 and state != states.die:
-		state = states.die
-		_on_boss_death()
+	if _death_system:
+		_death_system.death_rewards_callback = _on_boss_death_rewards
+		if loot_item:
+			_death_system.loot_item = loot_item
 
 
 func _physics_process(delta: float) -> void:
+	if state == states.die:
+		super._physics_process(delta)
+		return
 	_update_phase()
 	super._physics_process(delta)
 	_attack_cd = maxf(0.0, _attack_cd - delta)
@@ -68,7 +68,6 @@ func _update_phase() -> void:
 
 
 func _on_phase_changed(_phase: int) -> void:
-	# Override in boss subclasses for unique mechanics.
 	pass
 
 
@@ -86,15 +85,29 @@ func _try_slam_attack() -> void:
 			target._updateHUD()
 
 
-func _on_boss_death() -> void:
+func _on_boss_death_rewards() -> void:
 	if _xp_awarded:
 		return
 	_xp_awarded = true
 	ProgressionTracker.register_boss_defeat()
 	boss_defeated.emit()
 	StoryManager.trigger_boss_defeat(boss_name)
-	if loot_item and target and target.has_method("player"):
-		var handler = target.get_node_or_null("InventoryUI")
-		if handler and handler.has_method("pickupItem"):
-			handler.pickupItem(loot_item)
 	give_Gold()
+	if spawns_portal_on_death:
+		_spawn_progress_portal()
+
+
+func _spawn_progress_portal() -> void:
+	var parent := get_parent()
+	if parent == null:
+		return
+	var portal := PORTAL_SCENE.instantiate()
+	parent.add_child(portal)
+	# Place the portal just behind where the boss stood.
+	var behind := -global_transform.basis.z.normalized()
+	portal.global_position = global_position + behind * 3.0 + Vector3(0, 1.0, 0)
+	var world_gen := get_tree().current_scene.get_node_or_null("WorldGenerator")
+	if portal.has_method("configure"):
+		portal.configure(world_gen, null)
+	if portal.has_method("enable_portal"):
+		portal.call_deferred("enable_portal")

@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bm8uly0otrbty"]
 
+[ext_resource type="Script" path="res://systems/HubWorldStartup.gd" id="1_hub"]
 [ext_resource type="PackedScene" uid="uid://c6pwgggpdnkw7" path="res://assets/model/CliffProps/cliffProps1.glb" id="1_hgrhv"]
 [ext_resource type="PackedScene" uid="uid://b26fwg3f8cxtw" path="res://assets/model/CliffProps/cliffProps4.glb" id="2_dr8ba"]
 [ext_resource type="PackedScene" uid="uid://dfbv7pvl8p71v" path="res://assets/model/CliffProps/cliffProps2.glb" id="3_v5b4n"]
@@ -25,6 +26,9 @@ size = Vector2(50, 50)
 orientation = 1
 
 [node name="World2" type="Node3D" unique_id=250256519]
+
+[node name="HubWorldStartup" type="Node" parent="."]
+script = ExtResource("1_hub")
 
 [node name="cliffs" type="Node" parent="." unique_id=1327882256]
 

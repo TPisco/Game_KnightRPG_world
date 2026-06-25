@@ -93,6 +93,15 @@ func _on_body_entered(body: Node3D) -> void:
 	if not body.has_method("player"):
 		return
 	_picked = true
+	SoundManager.play("pickup")
+
+	# Skill tomes unlock a power instead of entering the inventory.
+	if loot_data.unlock_skill != "":
+		if ProgressionTracker.unlock_skill(loot_data.unlock_skill):
+			SoundManager.play("level")
+			StoryManager.trigger_story_event("skill_unlocked")
+		queue_free()
+		return
 
 	if loot_data.item_type == "consumable":
 		var heal: int = int(loot_data.stat_bonuses.get("heal", 25))

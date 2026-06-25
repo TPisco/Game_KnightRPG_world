@@ -16,6 +16,12 @@ func get_equipment_bonuses() -> Dictionary:
 
 
 func ItemEquiped(slotID: int) -> void:
+	# Consumables are used (and removed) instead of equipped.
+	if slotID >= 0 and slotID < InventorySlots.size():
+		var sel: ItemData = InventorySlots[slotID].SlotData
+		if sel and sel.item_type == "consumable":
+			_consume_item(slotID, sel)
+			return
 	if EquippedSlot != -1:
 		InventorySlots[EquippedSlot].FillSlot(InventorySlots[EquippedSlot].SlotData, false)
 		var old_data: ItemData = InventorySlots[EquippedSlot].SlotData
@@ -45,6 +51,36 @@ func ItemEquiped(slotID: int) -> void:
 	else:
 		EquippedSlot = -1
 	_recalculate_bonuses()
+
+
+func _consume_item(slotID: int, item: ItemData) -> void:
+	var heal: int = int(item.stat_bonuses.get("heal", 0))
+	var player = playerBody if playerBody else Global.player_node
+	if heal > 0 and player and "hp" in player and "Maxhp" in player:
+		player.hp = mini(player.Maxhp, player.hp + heal)
+		if player.has_method("_updateHUD"):
+			player._updateHUD()
+	if EquippedSlot == slotID:
+		EquippedSlot = -1
+	InventorySlots[slotID].FillSlot(null, false)
+	_recalculate_bonuses()
+
+
+func grant_all_weapons() -> void:
+	var items: Array[ItemData] = [
+		LootTable.rusted_sword(),
+		LootTable.fractured_blade(),
+		LootTable.wooden_shield(),
+		LootTable.guardian_plate(),
+		LootTable.fractured_shard(),
+	]
+	for item in items:
+		pickupItem(item.duplicate(true))
+	# Auto-equip the first weapon so attacks/skills are enabled in the hub.
+	for slot in InventorySlots:
+		if slot.SlotFilled and slot.SlotData and slot.SlotData.item_type == "weapon":
+			ItemEquiped(slot.InventorySlotID)
+			break
 
 
 func ItemDroppedOnSlot(fromSlotID: int, toSlotID: int) -> void:

@@ -5,6 +5,7 @@ extends CharacterBody3D
 const JUMP_VELOCITY := 4.5
 const STAMINA_REGEN := 10.0
 const DAMAGE_NUMBER_SCENE := preload("res://scenes/ui/DamageNumber.tscn")
+const SKILL_UI_SCENE := preload("res://scenes/ui/SkillSelectionUI.tscn")
 
 @export var move_speed: float = 5.0
 @export var jump_velocity: float = 4.5
@@ -25,6 +26,7 @@ var target: Array = []
 var isGuarding: bool = false
 
 @onready var camera: Camera3D = $FirstPov
+@onready var third_person_camera: Camera3D = $Head/ThirdPov
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var coolDown: Timer = $AttackCoolDown
 @onready var HpBar: TextureProgressBar = $HUD/HpBar
@@ -81,6 +83,79 @@ func _ready() -> void:
 		if skill_ui and skill_ui.has_method("bind_player"):
 			skill_ui.bind_player(self)
 	ProgressionTracker.level_up.connect(func(_l): refresh_stats())
+	if HubWorldStartup.is_hub_scene(get_tree().current_scene):
+		call_deferred("_setup_hub_testing")
+
+
+func setup_for_hub_testing() -> void:
+	if Global.hub_test_applied:
+		_ensure_skill_ui()
+		return
+	Global.hub_test_mode = true
+	ProgressionTracker.strength = 100
+	ProgressionTracker.magic = 100
+	ProgressionTracker.defense = 100
+	ProgressionTracker.stat_points = 50
+	ProgressionTracker.level = maxi(ProgressionTracker.level, 10)
+	ProgressionTracker.build_path = "hybrid"
+	ProgressionTracker.refresh_skill_unlocks()
+	for skill_id in ProgressionTracker.SKILL_DEFS:
+		if skill_id not in ProgressionTracker.unlocked_skills:
+			ProgressionTracker.unlocked_skills.append(skill_id)
+	for passive_id in ProgressionTracker.PASSIVE_DEFS:
+		if passive_id not in ProgressionTracker.unlocked_passives:
+			ProgressionTracker.unlocked_passives.append(passive_id)
+	if skill_system and skill_system.has_method("grant_all_skills"):
+		skill_system.grant_all_skills()
+	if inventory_ui and inventory_ui.has_method("grant_all_weapons"):
+		inventory_ui.grant_all_weapons()
+	hp = 1000
+	Maxhp = 1000
+	stamina = 200.0
+	max_stamina = 200.0
+	refresh_stats()
+	add_test_mode_effect()
+	_ensure_skill_ui()
+	Global.hub_test_applied = true
+
+
+func _setup_hub_testing() -> void:
+	if Global.hub_test_applied:
+		_ensure_skill_ui()
+		return
+	setup_for_hub_testing()
+
+
+func _ensure_skill_ui() -> void:
+	var run_root := get_tree().current_scene
+	if run_root == null:
+		return
+	var skill_ui = run_root.get_node_or_null("SkillSelectionUI")
+	if skill_ui == null:
+		skill_ui = SKILL_UI_SCENE.instantiate()
+		run_root.add_child(skill_ui)
+	if skill_ui.has_method("bind_player"):
+		skill_ui.bind_player(self)
+
+
+func add_test_mode_effect() -> void:
+	if has_node("TestModeGlow"):
+		return
+	var glow := OmniLight3D.new()
+	glow.name = "TestModeGlow"
+	glow.light_color = Color(0.35, 0.75, 1.0)
+	glow.light_energy = 1.4
+	glow.omni_range = 4.0
+	add_child(glow)
+	glow.position = Vector3(0, 1.2, 0)
+	var label := Label3D.new()
+	label.name = "TestModeLabel"
+	label.text = "TEST MODE\nPress K — skills"
+	label.font_size = 28
+	label.modulate = Color(0.4, 0.9, 1.0)
+	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	label.position = Vector3(0, 2.4, 0)
+	add_child(label)
 
 
 func refresh_stats() -> void:
@@ -94,7 +169,7 @@ func refresh_stats() -> void:
 	max_stamina = float(stats.get("max_stamina", 50.0))
 	move_speed = speed
 	hp = mini(hp, Maxhp)
-	stamina = mini(stamina, max_stamina)
+	stamina = minf(stamina, max_stamina)
 	HpBar.max_value = Maxhp
 	if StaminaBar:
 		StaminaBar.max_value = max_stamina
@@ -138,14 +213,16 @@ func die() -> void:
 
 func deal_Damage() -> void:
 	for enemy in target:
-		if not is_instance_valid(enemy) or not ("hp" in enemy):
+		if not is_instance_valid(enemy):
 			continue
 		var dealt := get_total_damage()
-		enemy.hp -= dealt
-		if enemy.has_method("show_damage_number"):
-			enemy.show_damage_number(dealt)
-		elif enemy is Node3D:
-			CombatFeedback.spawn_damage_number(enemy.global_position + Vector3(0, 1.5, 0), dealt, Color(1.0, 0.9, 0.3))
+		if enemy.has_method("take_damage"):
+			enemy.take_damage(dealt)
+		elif "hp" in enemy:
+			enemy.hp -= dealt
+			if enemy.has_method("show_damage_number"):
+				enemy.show_damage_number(dealt)
+	SoundManager.play("hit")
 	_apply_screen_shake(0.06)
 
 
@@ -279,12 +356,12 @@ func _input(event: InputEvent) -> void:
 
 
 func _switch_view() -> void:
-	if camera == $Head:
-		camera = $FirstPov
-		$FirstPov.current = true
+	if third_person_camera.current:
+		third_person_camera.current = false
+		camera.current = true
 	else:
-		camera = $Head
-		$Head/ThirdPov.current = true
+		camera.current = false
+		third_person_camera.current = true
 
 
 func _on_respawn_pressed() -> void:

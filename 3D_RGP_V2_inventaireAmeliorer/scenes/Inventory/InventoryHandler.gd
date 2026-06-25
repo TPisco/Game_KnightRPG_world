@@ -68,6 +68,29 @@ func _can_drop_data(at_position: Vector2,data:Variant)->bool:
 	return typeof(data) == TYPE_DICTIONARY and data["Type"] == "Item"
 
 func _drop_data(at_position: Vector2,data:Variant)->void:
+	# --- Safety checks (prevent crash on null/invalid data) ---
+	if typeof(data) != TYPE_DICTIONARY or not data.has("ID"):
+		print("Drop failed: invalid drag data")
+		return
+	var slot_index: int = int(data["ID"])
+	if slot_index < 0 or slot_index >= InventorySlots.size():
+		print("Drop failed: invalid slot index ", slot_index)
+		return
+	var slot := InventorySlots[slot_index]
+	if not slot.SlotFilled or slot.SlotData == null:
+		print("Drop failed: no item in slot ", slot_index)
+		return
+	if playerBody == null or playerBody.get_parent() == null:
+		print("Drop failed: player not in scene")
+		return
+	if slot.SlotData.ItemModelPrefab == null:
+		# Item has no world model (armor/artifact): clear the slot without crashing.
+		print("Drop: '", slot.SlotData.ItemName, "' has no world model — removed from inventory")
+		if EquippedSlot == slot_index:
+			EquippedSlot = -1
+		slot.FillSlot(null, false)
+		return
+	# --- Original logic (unchanged) ---
 	if EquippedSlot == data["ID"] :
 		EquippedSlot = -1
 	var newItem = InventorySlots[data["ID"]].SlotData.ItemModelPrefab.instantiate() as Node3D
