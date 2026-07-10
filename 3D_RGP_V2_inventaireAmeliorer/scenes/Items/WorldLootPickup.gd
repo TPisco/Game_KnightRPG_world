@@ -32,6 +32,17 @@ func _build_visual() -> void:
 	root.name = "Visual"
 	add_child(root)
 
+	# Prefer the matching FantasyPack model; fall back to primitive shapes.
+	var model_path := _pack_model_for_item()
+	if model_path != "" and ResourceLoader.exists(model_path):
+		var model := (load(model_path) as PackedScene).instantiate()
+		root.add_child(model)
+		model.position.y = 0.15
+		model.rotation_degrees.y = 25.0
+		_start_bob(root)
+		_ensure_collision()
+		return
+
 	var mesh_inst := MeshInstance3D.new()
 	var mat := StandardMaterial3D.new()
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
@@ -73,12 +84,48 @@ func _build_visual() -> void:
 	mat.albedo_color.a = 1.0
 	mesh_inst.material_override = mat
 	root.add_child(mesh_inst)
+	_start_bob(root)
+	_ensure_collision()
 
-	# Floating bob animation target
+
+## FantasyPack world model matching this item, or "" for primitive fallback.
+func _pack_model_for_item() -> String:
+	var pack := "res://assets/model/FantasyPack/"
+	if loot_data.item_type == "consumable":
+		if int(loot_data.stat_bonuses.get("mana", 0)) > 0:
+			return pack + "shop/potion_blue.glb"
+		return pack + "shop/potion_red.glb"
+	if loot_data.item_type == "weapon":
+		match loot_data.ItemName:
+			"Rusted Sword":
+				return pack + "weapons/sword_basic.glb"
+			"Fractured Blade":
+				return pack + "weapons/sword_fractured.glb"
+			"Knight's Blade":
+				return pack + "weapons/sword_knight.glb"
+			"RiftPistol":
+				return pack + "weapons/gun_flintlock.glb"
+			"ShardRifle":
+				return pack + "weapons/gun_blunderbuss.glb"
+			"ApprenticeStaff":
+				return pack + "weapons/staff_arcane.glb"
+			"EmberStaff":
+				return pack + "weapons/staff_fire.glb"
+	if loot_data.item_type == "armor":
+		if loot_data.ItemName == "WoodenShield":
+			return pack + "weapons/shield_round.glb"
+		return pack + "weapons/shield_kite.glb"
+	# Tomes/artifacts keep the glowing primitive — reads as "magic" from afar.
+	return ""
+
+
+func _start_bob(root: Node3D) -> void:
 	var tween := create_tween().set_loops()
 	tween.tween_property(root, "position:y", 0.15, 0.8).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(root, "position:y", 0.0, 0.8).set_ease(Tween.EASE_IN_OUT)
 
+
+func _ensure_collision() -> void:
 	if not has_node("CollisionShape3D"):
 		var col := CollisionShape3D.new()
 		var shape := SphereShape3D.new()
@@ -104,8 +151,14 @@ func _on_body_entered(body: Node3D) -> void:
 		return
 
 	if loot_data.item_type == "consumable":
-		var heal: int = int(loot_data.stat_bonuses.get("heal", 25))
-		body.hp = mini(body.Maxhp, body.hp + heal)
+		var heal: int = int(loot_data.stat_bonuses.get("heal", 0))
+		var mana_restore: int = int(loot_data.stat_bonuses.get("mana", 0))
+		if heal == 0 and mana_restore == 0:
+			heal = 25
+		if heal > 0:
+			body.hp = mini(body.Maxhp, body.hp + heal)
+		if mana_restore > 0 and body.has_method("restore_mana"):
+			body.restore_mana(float(mana_restore))
 		body._updateHUD()
 	else:
 		var inv = body.get_node_or_null("InventoryUI")

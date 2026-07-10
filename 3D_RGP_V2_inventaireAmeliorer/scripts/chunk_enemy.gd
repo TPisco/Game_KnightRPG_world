@@ -26,6 +26,18 @@ func enemy() -> void:
 func _ready() -> void:
 	add_to_group("enemies")
 	_setup_death_system()
+	EnemyHealthBar.attach(self)
+
+
+## Swaps the placeholder capsule for a FantasyPack model and refits the
+## collision capsule + health bar to the model's real size.
+func set_mob_visual(model_path: String) -> void:
+	var model := ModelLibrary.apply_character_model(self, model_path, true, true)
+	if model == null:
+		return
+	var bar := get_node_or_null("HealthBar")
+	if bar and bar.has_method("_compute_top_y"):
+		bar.position.y = bar._compute_top_y(self) + 0.45
 
 
 func _setup_death_system() -> void:

@@ -79,18 +79,21 @@ func get_cooldown_remaining(skill_id: String = "") -> float:
 	return _cooldowns.get(id, 0.0)
 
 
-func activate_skill() -> bool:
-	if not _player or active_skill == "":
+## Casts a specific power (defaults to the selected active skill), so every
+## unlocked power stays usable at once through its own hotkey.
+func activate_skill(skill_id: String = "") -> bool:
+	var id := skill_id if skill_id != "" else active_skill
+	if not _player or id == "":
 		return false
-	if not Global.hub_test_mode and not ProgressionTracker.is_skill_unlocked(active_skill):
+	if not Global.hub_test_mode and not ProgressionTracker.is_skill_unlocked(id):
 		return false
-	if is_on_cooldown():
+	if is_on_cooldown(id):
 		return false
-	var stamina_cost: float = 0.0 if Global.hub_test_mode else SKILL_STAMINA_COSTS.get(active_skill, 20.0)
+	var stamina_cost: float = 0.0 if Global.hub_test_mode else SKILL_STAMINA_COSTS.get(id, 20.0)
 	if stamina_cost > 0.0 and _player.has_method("spend_stamina") and not _player.spend_stamina(stamina_cost):
 		return false
 
-	match active_skill:
+	match id:
 		"power_slash":
 			_use_power_slash()
 		"arcane_bolt":
@@ -102,9 +105,9 @@ func activate_skill() -> bool:
 		_:
 			return false
 
-	_start_cooldown(active_skill)
+	_start_cooldown(id)
 	SoundManager.play("skill")
-	skill_activated.emit(active_skill)
+	skill_activated.emit(id)
 	return true
 
 

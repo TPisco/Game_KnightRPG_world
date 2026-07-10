@@ -61,6 +61,7 @@ script = ExtResource("1_boss")
 boss_name = "Void Warden"
 navAgent = NodePath("NavigationAgent3D")
 animationPlayer = NodePath("AnimationPlayer")
+model_path = "res://assets/model/FantasyPack/bosses/boss_void_warden.glb"
 hp = 450
 damage = 35
 speed = 3.0

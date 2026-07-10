@@ -11,17 +11,25 @@ const PORTAL_SCENE := preload("res://scenes/world/cave_portal.tscn")
 @export var phase_thresholds: Array[float] = [0.66, 0.33]
 @export var loot_item: ItemData
 @export var spawns_portal_on_death: bool = true
+## FantasyPack boss model; replaces the placeholder "Visual" when available.
+@export var model_path: String = ""
 
 var max_hp: int = 200
 var current_phase: int = 1
 var _xp_awarded: bool = false
 var _attack_cd: float = 0.0
+var _slam_cd: float = 0.0
 
 
 func _ready() -> void:
 	super._ready()
 	max_hp = hp
 	add_to_group("bosses")
+	if model_path != "" and ModelLibrary.exists(model_path):
+		ModelLibrary.apply_character_model(self, model_path, true, true)
+		var bar := get_node_or_null("HealthBar")
+		if bar and bar.has_method("_compute_top_y"):
+			bar.position.y = bar._compute_top_y(self) + 0.45
 	if _death_system:
 		_death_system.death_rewards_callback = _on_boss_death_rewards
 		if loot_item:
@@ -35,6 +43,7 @@ func _physics_process(delta: float) -> void:
 	_update_phase()
 	super._physics_process(delta)
 	_attack_cd = maxf(0.0, _attack_cd - delta)
+	_slam_cd = maxf(0.0, _slam_cd - delta)
 
 	if state == states.chase:
 		speed = 2.0 + current_phase * 0.5
@@ -42,8 +51,9 @@ func _physics_process(delta: float) -> void:
 		if _attack_cd <= 0.0 and target:
 			_perform_attack()
 			_attack_cd = 1.4 - current_phase * 0.1
-		if current_phase >= 2:
+		if current_phase >= 2 and _slam_cd <= 0.0:
 			_try_slam_attack()
+			_slam_cd = 3.5 - current_phase * 0.5
 
 
 func _perform_attack() -> void:
@@ -75,12 +85,13 @@ func _try_slam_attack() -> void:
 	if target == null:
 		return
 	if target.global_position.distance_to(global_position) < 5.0:
+		# take_damage applies the guard multiplier itself — pass raw slam damage.
 		var dmg := int(damage * 1.5)
-		if target.isGuarding:
-			dmg = int(damage * ProgressionTracker.get_guard_damage_multiplier())
 		if target.has_method("take_damage"):
 			target.take_damage(dmg)
 		elif "hp" in target:
+			if target.isGuarding:
+				dmg = maxi(1, int(dmg * ProgressionTracker.get_guard_damage_multiplier()))
 			target.hp -= dmg
 			target._updateHUD()
 

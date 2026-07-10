@@ -40,6 +40,23 @@ static func get_boss_name(milestone: int) -> String:
 	return BOSSES_BY_MILESTONE.get(milestone, {}).get("name", "Unknown Guardian")
 
 
+## Realm index (cave_portals_cleared) -> that realm's real boss.
+static func get_boss_milestone_for_realm(realm_index: int) -> int:
+	if realm_index <= 0:
+		return 5
+	if realm_index == 1:
+		return 12
+	return 20
+
+
+static func get_boss_scene_for_realm(realm_index: int) -> PackedScene:
+	return get_boss_scene(get_boss_milestone_for_realm(realm_index))
+
+
+static func get_boss_name_for_realm(realm_index: int) -> String:
+	return get_boss_name(get_boss_milestone_for_realm(realm_index))
+
+
 static func get_realm_for_depth(depth: int) -> Dictionary:
 	var best: Dictionary = REALM_BY_DEPTH[0]
 	var best_depth := -1

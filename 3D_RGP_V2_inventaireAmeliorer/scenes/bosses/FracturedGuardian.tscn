@@ -58,6 +58,7 @@ _data = {
 script = ExtResource("1_boss")
 navAgent = NodePath("NavigationAgent3D")
 animationPlayer = NodePath("AnimationPlayer")
+model_path = "res://assets/model/FantasyPack/bosses/boss_fractured_guardian.glb"
 hp = 250
 damage = 25
 speed = 2.5

@@ -56,9 +56,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -160.0
-offset_top = -120.0
+offset_top = -150.0
 offset_right = 160.0
-offset_bottom = 180.0
+offset_bottom = 210.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -77,11 +77,11 @@ theme_override_constants/separation = 12
 
 [node name="StartRunBtn" type="Button" parent="Panel/VBox"]
 layout_mode = 2
-text = "Start Run"
+text = "Start New Run"
 
 [node name="ContinueBtn" type="Button" parent="Panel/VBox"]
 layout_mode = 2
-text = "Continue"
+text = "Continue Game"
 
 [node name="HubBtn" type="Button" parent="Panel/VBox"]
 layout_mode = 2
@@ -90,6 +90,10 @@ text = "Original Hub World"
 [node name="SettingsBtn" type="Button" parent="Panel/VBox"]
 layout_mode = 2
 text = "Settings"
+
+[node name="ControlsBtn" type="Button" parent="Panel/VBox"]
+layout_mode = 2
+text = "Controls"
 
 [node name="CreditsBtn" type="Button" parent="Panel/VBox"]
 layout_mode = 2
@@ -227,6 +231,7 @@ text = "Close"
 [connection signal="pressed" from="Panel/VBox/ContinueBtn" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="Panel/VBox/HubBtn" to="." method="_on_hub_pressed"]
 [connection signal="pressed" from="Panel/VBox/SettingsBtn" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Panel/VBox/ControlsBtn" to="." method="_on_controls_pressed"]
 [connection signal="pressed" from="Panel/VBox/CreditsBtn" to="." method="_on_credits_pressed"]
 [connection signal="pressed" from="Panel/VBox/QuitBtn" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="SettingsPanel/CloseSettingsBtn" to="." method="_on_close_settings_pressed"]

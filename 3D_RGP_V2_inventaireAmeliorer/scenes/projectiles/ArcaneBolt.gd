@@ -27,8 +27,13 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_body_entered(body: Node3D) -> void:
-	if body.has_method("enemy") and "hp" in body:
-		body.hp -= _damage
+	if body.has_method("enemy"):
+		if body.has_method("take_damage"):
+			body.take_damage(_damage)
+		elif "hp" in body:
+			body.hp -= _damage
+			if body.has_method("show_damage_number"):
+				body.show_damage_number(_damage)
 		queue_free()
 	elif body is StaticBody3D:
 		queue_free()

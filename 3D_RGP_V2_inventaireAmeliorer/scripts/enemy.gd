@@ -25,6 +25,7 @@ func enemy() -> void:
 func _ready() -> void:
 	add_to_group("enemies")
 	_setup_death_system()
+	EnemyHealthBar.attach(self)
 
 
 func _setup_death_system() -> void:

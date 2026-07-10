@@ -33,7 +33,33 @@ const STORY_BEATS: Dictionary = {
 		{"speaker": "Whisper", "text": "A guardian stirs. Steel yourself, knight."},
 	],
 	"ending": [
-		{"speaker": "Unknown Voice", "text": "Only the strongest will find the path home. Press on, fractured knight."},
+		{"speaker": "The Void Warden", "text": "The gate... opens. The path you seek was sealed behind me."},
+		{"speaker": "Unknown Voice", "text": "The fractures tremble. For the first time, you glimpse your own world beyond the rift."},
+		{"speaker": "Unknown Voice", "text": "Step through, knight — or delve deeper. The multiverse still holds its secrets."},
+	],
+	"random_dungeon_clear": [
+		{"speaker": "The Rift", "text": "The vault falls silent. Take your spoils, knight — the return portal glows green."},
+	],
+	"dungeon_enter": [
+		{"speaker": "The Rift", "text": "A sealed chamber between worlds. Something old guards this place."},
+	],
+	"dungeon_first_clear": [
+		{"speaker": "The Rift", "text": "The first seal shatters. One more guardian holds the way to this realm's master."},
+	],
+	"dungeon_unlocked": [
+		{"speaker": "The Rift", "text": "The second seal breaks! The Boss Gate burns crimson — the realm's master awaits."},
+	],
+	"hub_memory": [
+		{"speaker": "Memory", "text": "This place... a fragment of the world you were torn from. It holds, for now."},
+		{"speaker": "Memory", "text": "Rest. Prepare. Beyond the rifts, the fractured worlds are waiting."},
+	],
+	"shop_first": [
+		{"speaker": "The Collector", "text": "Another one pulled through the cracks... A knight, this time. Curious."},
+		{"speaker": "The Collector", "text": "I gather what the fracture scatters — blades, powder-arms, staffs, bottled light. All for a price."},
+		{"speaker": "The Collector", "text": "Gold means little between worlds, yet I collect it still. Spend it — you will not survive the deep rifts empty-handed."},
+	],
+	"shop_visit": [
+		{"speaker": "The Collector", "text": "Back again, knight. The rifts grow hungrier — browse, and arm yourself."},
 	],
 }
 

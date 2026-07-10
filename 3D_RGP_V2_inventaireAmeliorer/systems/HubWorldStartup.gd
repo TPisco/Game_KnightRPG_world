@@ -36,3 +36,6 @@ func _grant_when_ready() -> void:
 		knight = get_parent().find_child("player", true, false)
 	if knight:
 		grant_testing_power(knight)
+	if not Global.hub_story_shown:
+		Global.hub_story_shown = true
+		StoryManager.trigger_story_event("hub_memory")

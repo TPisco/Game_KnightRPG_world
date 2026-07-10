@@ -3,6 +3,7 @@ class_name CaveGuardian
 extends "res://scripts/chunk_enemy.gd"
 
 const PORTAL_SCENE := preload("res://scenes/world/cave_portal.tscn")
+const GUARDIAN_MODEL := "res://assets/model/FantasyPack/minibosses/miniboss_cave_guardian.glb"
 
 var _portal_spawn_local: Vector3 = Vector3.ZERO
 var _owner_chunk: Node3D = null
@@ -16,7 +17,12 @@ func _ready() -> void:
 	attack_interval = 2.0
 	super._ready()
 	add_to_group("cave_guardians")
-	_make_guardian_big_and_red()
+	if ModelLibrary.exists(GUARDIAN_MODEL):
+		# Authored ~2.4 m and already red — a modest scale makes it a 3.5 m brute.
+		set_mob_visual(GUARDIAN_MODEL)
+		scale = Vector3(1.45, 1.45, 1.45)
+	else:
+		_make_guardian_big_and_red()
 
 
 func configure(portal_local: Vector3, owner_chunk: Node3D) -> void:
@@ -49,6 +55,12 @@ func _make_guardian_big_and_red() -> void:
 
 
 func _spawn_portal_behind() -> void:
+	# Guardian kills still reward XP and gold on top of opening the portal.
+	ProgressionTracker.add_xp(value)
+	if target and is_instance_valid(target) and target.has_method("player"):
+		target.gold += value
+		if target.has_method("_updateHUD"):
+			target._updateHUD()
 	if _portal_spawn_local == Vector3.ZERO and _owner_chunk == null:
 		return
 

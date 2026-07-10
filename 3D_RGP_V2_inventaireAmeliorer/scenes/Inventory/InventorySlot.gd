@@ -53,7 +53,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 		return false
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
-	return typeof(data) == TYPE_DICTIONARY and data["Type"] == "Item"
+	return typeof(data) == TYPE_DICTIONARY and data.get("Type", "") == "Item"
 	
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:

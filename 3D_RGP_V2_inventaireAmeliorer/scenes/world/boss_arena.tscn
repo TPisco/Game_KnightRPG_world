@@ -1,0 +1,149 @@
+[gd_scene format=3 uid="uid://c8bossarena01"]
+
+[ext_resource type="Script" path="res://systems/BossArena.gd" id="1_arena"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.2, 0.17, 0.19, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_color = Color(0.25, 0.2, 0.24, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(30, 1, 30)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(30, 1, 30)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wallx"]
+size = Vector3(1, 12, 30)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wallx"]
+size = Vector3(1, 12, 30)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wallz"]
+size = Vector3(30, 12, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wallz"]
+size = Vector3(30, 12, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ceiling"]
+size = Vector3(30, 1, 30)
+
+[sub_resource type="BoxMesh" id="BoxMesh_exitdoor"]
+size = Vector3(2, 3, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_exit"]
+albedo_color = Color(0.4, 0.7, 1, 0.85)
+transparency = 1
+emission_enabled = true
+emission = Color(0.3, 0.6, 1, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_exit"]
+size = Vector3(2.4, 3, 1.2)
+
+[node name="BossArena" type="Node3D"]
+script = ExtResource("1_arena")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="Col" type="CollisionShape3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_floor")
+
+[node name="WallLeft" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="WallLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 6, 0)
+mesh = SubResource("BoxMesh_wallx")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="Col" type="CollisionShape3D" parent="WallLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 6, 0)
+shape = SubResource("BoxShape3D_wallx")
+
+[node name="WallRight" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="WallRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 6, 0)
+mesh = SubResource("BoxMesh_wallx")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="Col" type="CollisionShape3D" parent="WallRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 6, 0)
+shape = SubResource("BoxShape3D_wallx")
+
+[node name="WallBack" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="WallBack"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -15)
+mesh = SubResource("BoxMesh_wallz")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="Col" type="CollisionShape3D" parent="WallBack"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -15)
+shape = SubResource("BoxShape3D_wallz")
+
+[node name="WallFront" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="WallFront"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 15)
+mesh = SubResource("BoxMesh_wallz")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="Col" type="CollisionShape3D" parent="WallFront"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 15)
+shape = SubResource("BoxShape3D_wallz")
+
+[node name="Ceiling" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.5, 0)
+mesh = SubResource("BoxMesh_ceiling")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="ExitDoorVisual" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -14.6)
+mesh = SubResource("BoxMesh_exitdoor")
+surface_material_override/0 = SubResource("StandardMaterial3D_exit")
+
+[node name="ExitLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, -14.4)
+billboard = 1
+text = "Flee to Surface"
+font_size = 34
+modulate = Color(0.6, 0.85, 1, 1)
+
+[node name="ExitArea" type="Area3D" parent="."]
+
+[node name="Col" type="CollisionShape3D" parent="ExitArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -14.2)
+shape = SubResource("BoxShape3D_exit")
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -11)
+
+[node name="BossSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 7)
+
+[node name="Light1" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 9, -8)
+light_color = Color(1, 0.45, 0.35, 1)
+light_energy = 1.6
+omni_range = 24.0
+
+[node name="Light2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 9, 8)
+light_color = Color(0.7, 0.35, 0.8, 1)
+light_energy = 1.6
+omni_range = 24.0

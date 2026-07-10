@@ -6,9 +6,10 @@ const CHUNK_SCENE := preload("res://scenes/world/WorldChunk.tscn")
 const PLAYER_SCENE := preload("res://scenes/objects/player.tscn")
 
 const CHUNK_SIZE := 32
-const LOAD_RANGE := 3
-const UNLOAD_RANGE := 5
-const BOSS_MILESTONES := [5, 12, 20]
+const LOAD_RANGE := 4
+const UNLOAD_RANGE := 6
+## Enemies only simulate within this many chunks of the player (5x5 area).
+const MOB_ACTIVE_RANGE := 2
 
 signal chunk_spawned(chunk_node: Node)
 signal chunk_unloaded(chunk_node: Node)
@@ -21,13 +22,12 @@ var active_chunks: Dictionary = {}
 var _player: CharacterBody3D
 var _last_player_chunk: Vector2i = Vector2i.ZERO
 var _last_realm_id: String = ""
-var _bosses_spawned: Array[int] = []
 var _chunks_loading: bool = false
 
 
 func _ready() -> void:
 	if Global.continue_run:
-		ProgressionTracker.load_game()
+		# Save data was already applied by SaveManager.load_slot().
 		world_seed = ProgressionTracker.run_seed + ProgressionTracker.cave_portals_cleared * 10007
 		Global.continue_run = false
 	elif ProgressionTracker.run_seed == 0:
@@ -40,6 +40,9 @@ func _ready() -> void:
 	_bind_skill_ui()
 	_last_player_chunk = _world_to_chunk(_player.global_position)
 	call_deferred("_refresh_chunks_async")
+	# Boss already unlocked (e.g. after Restart Here): offer the gate again.
+	if ProgressionTracker.minibosses_cleared >= 2:
+		call_deferred("_spawn_boss_gate_near_player")
 
 
 func _bind_skill_ui() -> void:
@@ -54,12 +57,17 @@ func _process(_delta: float) -> void:
 	var chunk := _world_to_chunk(_player.global_position)
 	if chunk != _last_player_chunk:
 		_last_player_chunk = chunk
+		_update_mob_activation()
 		call_deferred("_refresh_chunks_async")
 	var depth := maxi(absi(chunk.x), absi(chunk.y))
 	difficulty_multiplier = 1.0 + depth * 0.12
 	ProgressionTracker.update_run_depth(depth)
 	_check_realm_change(depth)
-	_check_boss_spawn(depth)
+	# Remember the last spot on the open surface for "Restart Here"
+	# (underground caves and dungeon rooms don't count).
+	var p := _player.global_position
+	if p.y > WorldChunk.get_terrain_height(world_seed, p.x, p.z) - 3.0:
+		Global.last_surface_position = p
 
 
 func get_player_position() -> Vector3:
@@ -73,13 +81,20 @@ func _spawn_player() -> void:
 	var spawn_pos: Vector3 = Vector3(16, 6, 16)
 	if spawn is Node3D:
 		spawn_pos = (spawn as Node3D).global_position
-	var spawn_chunk := _world_to_chunk(spawn_pos)
-	var noise := FastNoiseLite.new()
-	noise.seed = world_seed
-	noise.frequency = 0.04
-	noise.fractal_octaves = 3
-	var terrain_h := noise.get_noise_2d(spawn_pos.x, spawn_pos.z) * 3.0
+	var terrain_h := WorldChunk.get_terrain_height(world_seed, spawn_pos.x, spawn_pos.z)
 	spawn_pos.y = terrain_h + 2.0
+
+	# Continue Game: put the knight back where that run was left.
+	var saved_pos := SaveManager.take_pending_player_pos()
+	if saved_pos != SaveManager.NO_POSITION:
+		spawn_pos = saved_pos
+		var ground := WorldChunk.get_terrain_height(world_seed, spawn_pos.x, spawn_pos.z)
+		# Saved inside the shop interior (or below ground): resurface safely.
+		if spawn_pos.y < ground - 1.0:
+			spawn_pos.y = ground + 2.0
+		else:
+			spawn_pos.y = maxf(spawn_pos.y + 0.3, ground + 1.2)
+
 	_player = PLAYER_SCENE.instantiate()
 	add_child(_player)
 	_player.global_position = spawn_pos
@@ -123,6 +138,12 @@ func _refresh_chunks_async() -> void:
 			var key := _chunk_key(coord)
 			if key not in active_chunks:
 				to_spawn.append(coord)
+
+	# Closest chunks first so the ground under the player has collision
+	# before gravity can drop them through unloaded terrain.
+	to_spawn.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		return _chunk_distance_to_player(a) < _chunk_distance_to_player(b)
+	)
 
 	for coord in to_spawn:
 		_spawn_chunk(coord)
@@ -174,9 +195,9 @@ func _rebuild_world_barrier() -> void:
 	var z1 := float((max_cz + 1) * CHUNK_SIZE)
 	var span_x := x1 - x0
 	var span_z := z1 - z0
-	var wall_h := 18.0
+	var wall_h := 44.0
 	var wall_thick := 2.0
-	var mid_y := 6.0
+	var mid_y := 8.0
 
 	var cliff_mat := StandardMaterial3D.new()
 	cliff_mat.albedo_color = Color(0.32, 0.24, 0.18)
@@ -190,7 +211,7 @@ func _rebuild_world_barrier() -> void:
 	floor_shape.size = Vector3(span_x + 8.0, 1.0, span_z + 8.0)
 	var floor_col := CollisionShape3D.new()
 	floor_col.shape = floor_shape
-	floor_col.position = Vector3((x0 + x1) * 0.5, -12.0, (z0 + z1) * 0.5)
+	floor_col.position = Vector3((x0 + x1) * 0.5, -26.0, (z0 + z1) * 0.5)
 	barrier.add_child(floor_col)
 
 
@@ -218,7 +239,20 @@ func _spawn_chunk(coord: Vector2i) -> void:
 	if chunk.has_method("setup"):
 		chunk.setup(coord, world_seed, depth, difficulty_multiplier)
 	active_chunks[_chunk_key(coord)] = chunk
+	if chunk.has_method("set_mobs_active"):
+		chunk.set_mobs_active(_chunk_distance_to_player(coord) <= MOB_ACTIVE_RANGE)
 	chunk_spawned.emit(chunk)
+
+
+## Enable mobs in nearby chunks, freeze them everywhere else.
+func _update_mob_activation() -> void:
+	for key in active_chunks.keys():
+		var chunk_node: Node = active_chunks[key]
+		if not is_instance_valid(chunk_node):
+			continue
+		if chunk_node is WorldChunk and chunk_node.has_method("set_mobs_active"):
+			var dist := _chunk_distance_to_player((chunk_node as WorldChunk).chunk_coord)
+			chunk_node.set_mobs_active(dist <= MOB_ACTIVE_RANGE)
 
 
 func _chunk_key(coord: Vector2i) -> String:
@@ -233,37 +267,17 @@ func _check_realm_change(depth: int) -> void:
 	_last_realm_id = realm_id
 
 
-func _check_boss_spawn(depth: int) -> void:
-	for milestone in BOSS_MILESTONES:
-		if depth >= milestone and milestone not in _bosses_spawned:
-			_bosses_spawned.append(milestone)
-			_spawn_boss(milestone)
-
-
-func _spawn_boss(milestone: int) -> void:
+## After Restart Here (or reload) with both seals broken, place a Boss Gate on
+## the surface near the player so the unlocked boss stays reachable.
+func _spawn_boss_gate_near_player() -> void:
 	if not is_instance_valid(_player):
 		return
-	var story_hud = get_tree().current_scene.get_node_or_null("RunStoryHUD")
-	if story_hud and story_hud.has_method("show_boss_warning"):
-		story_hud.show_boss_warning(milestone)
-	StoryManager.trigger_boss_warning()
-
-	var boss_scene: PackedScene = BossRegistry.get_boss_scene(milestone)
-	var boss := boss_scene.instantiate()
-	add_child(boss)
-	var offset := Vector3(randf_range(-10, 10), 0, randf_range(16, 24))
-	boss.global_position = _player.global_position + offset
-	var chunk := _world_to_chunk(boss.global_position)
-	var noise := FastNoiseLite.new()
-	noise.seed = world_seed
-	noise.frequency = 0.04
-	noise.fractal_octaves = 3
-	var h := noise.get_noise_2d(boss.global_position.x, boss.global_position.z) * 3.0
-	boss.global_position.y = h + 3.5
-
-	var boss_ui = get_tree().current_scene.get_node_or_null("BossUI")
-	if boss_ui and boss_ui.has_method("register_boss"):
-		boss_ui.register_boss(boss)
+	var gate := BossGate.new()
+	add_child(gate)
+	var pos := _player.global_position + Vector3(6, 0, 6)
+	pos.y = WorldChunk.get_terrain_height(world_seed, pos.x, pos.z)
+	gate.global_position = pos
+	gate.configure(pos + Vector3(3, 1.2, 3))
 
 
 func enter_cave_portal(_portal: Node) -> void:
@@ -271,6 +285,7 @@ func enter_cave_portal(_portal: Node) -> void:
 		return
 
 	ProgressionTracker.cave_portals_cleared += 1
+	ProgressionTracker.minibosses_cleared = 0  # new realm, new dungeon seals
 	ProgressionTracker.update_run_depth(ProgressionTracker.run_depth + 3)
 	ProgressionTracker.save_game()
 
@@ -295,9 +310,5 @@ func enter_cave_portal(_portal: Node) -> void:
 func _place_player_on_terrain() -> void:
 	if not is_instance_valid(_player):
 		return
-	var noise := FastNoiseLite.new()
-	noise.seed = world_seed
-	noise.frequency = 0.04
-	noise.fractal_octaves = 3
-	var h := noise.get_noise_2d(_player.global_position.x, _player.global_position.z) * 3.0
+	var h := WorldChunk.get_terrain_height(world_seed, _player.global_position.x, _player.global_position.z)
 	_player.global_position.y = h + 2.0

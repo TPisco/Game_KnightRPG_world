@@ -1,0 +1,188 @@
+[gd_scene format=3 uid="uid://c8shopbld0001"]
+
+[ext_resource type="Script" path="res://systems/ShopBuilding.gd" id="1_shop"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_foundation"]
+size = Vector3(10, 0.8, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_foundation"]
+size = Vector3(10, 0.8, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stonebase"]
+albedo_color = Color(0.45, 0.44, 0.42, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_wallside"]
+size = Vector3(0.4, 4, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wallside"]
+size = Vector3(0.4, 4, 8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wallback"]
+size = Vector3(8, 4, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wallback"]
+size = Vector3(8, 4, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_walls"]
+albedo_color = Color(0.52, 0.42, 0.3, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BoxMesh_frontseg"]
+size = Vector3(3.2, 4, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_frontseg"]
+size = Vector3(3.2, 4, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lintel"]
+size = Vector3(1.6, 1.6, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lintel"]
+size = Vector3(1.6, 1.6, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_roof"]
+size = Vector3(9.2, 0.5, 9.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_roof"]
+size = Vector3(9.2, 0.5, 9.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_roof"]
+albedo_color = Color(0.3, 0.16, 0.12, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_doorglow"]
+size = Vector3(1.5, 2.3, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_doorglow"]
+albedo_color = Color(0.5, 0.35, 0.9, 0.85)
+transparency = 1
+emission_enabled = true
+emission = Color(0.45, 0.25, 0.9, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_doorarea"]
+size = Vector3(1.5, 2.4, 1.4)
+
+[node name="ShopBuilding" type="Node3D"]
+script = ExtResource("1_shop")
+
+[node name="Foundation" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="Foundation"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = SubResource("BoxMesh_foundation")
+surface_material_override/0 = SubResource("StandardMaterial3D_stonebase")
+
+[node name="Col" type="CollisionShape3D" parent="Foundation"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+shape = SubResource("BoxShape3D_foundation")
+
+[node name="WallLeft" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="WallLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, 0)
+mesh = SubResource("BoxMesh_wallside")
+surface_material_override/0 = SubResource("StandardMaterial3D_walls")
+
+[node name="Col" type="CollisionShape3D" parent="WallLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, 0)
+shape = SubResource("BoxShape3D_wallside")
+
+[node name="WallRight" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="WallRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, 0)
+mesh = SubResource("BoxMesh_wallside")
+surface_material_override/0 = SubResource("StandardMaterial3D_walls")
+
+[node name="Col" type="CollisionShape3D" parent="WallRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, 0)
+shape = SubResource("BoxShape3D_wallside")
+
+[node name="WallBack" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="WallBack"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -4)
+mesh = SubResource("BoxMesh_wallback")
+surface_material_override/0 = SubResource("StandardMaterial3D_walls")
+
+[node name="Col" type="CollisionShape3D" parent="WallBack"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -4)
+shape = SubResource("BoxShape3D_wallback")
+
+[node name="FrontLeft" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="FrontLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 2.5, 4)
+mesh = SubResource("BoxMesh_frontseg")
+surface_material_override/0 = SubResource("StandardMaterial3D_walls")
+
+[node name="Col" type="CollisionShape3D" parent="FrontLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 2.5, 4)
+shape = SubResource("BoxShape3D_frontseg")
+
+[node name="FrontRight" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="FrontRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 2.5, 4)
+mesh = SubResource("BoxMesh_frontseg")
+surface_material_override/0 = SubResource("StandardMaterial3D_walls")
+
+[node name="Col" type="CollisionShape3D" parent="FrontRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 2.5, 4)
+shape = SubResource("BoxShape3D_frontseg")
+
+[node name="Lintel" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="Lintel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7, 4)
+mesh = SubResource("BoxMesh_lintel")
+surface_material_override/0 = SubResource("StandardMaterial3D_walls")
+
+[node name="Col" type="CollisionShape3D" parent="Lintel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7, 4)
+shape = SubResource("BoxShape3D_lintel")
+
+[node name="Roof" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="Mesh" type="MeshInstance3D" parent="Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.75, 0)
+mesh = SubResource("BoxMesh_roof")
+surface_material_override/0 = SubResource("StandardMaterial3D_roof")
+
+[node name="Col" type="CollisionShape3D" parent="Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.75, 0)
+shape = SubResource("BoxShape3D_roof")
+
+[node name="DoorGlow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 4)
+mesh = SubResource("BoxMesh_doorglow")
+surface_material_override/0 = SubResource("StandardMaterial3D_doorglow")
+
+[node name="DoorArea" type="Area3D" parent="."]
+
+[node name="Col" type="CollisionShape3D" parent="DoorArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 4.3)
+shape = SubResource("BoxShape3D_doorarea")
+
+[node name="ShopSign" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.2, 0)
+billboard = 1
+text = "SHOP"
+font_size = 96
+modulate = Color(1, 0.85, 0.4, 1)
+outline_size = 12
+
+[node name="DoorLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 4.8)
+light_color = Color(0.7, 0.5, 1, 1)
+light_energy = 1.4
+omni_range = 8.0

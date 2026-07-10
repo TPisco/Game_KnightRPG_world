@@ -9,7 +9,7 @@ class_name InventoryHandler
 @export var InventoryGrid : GridContainer
 @export var InventorySlotPrefab : PackedScene = preload("res://scenes/Inventory/InventorySlot.tscn")
 
-@onready var equipped_item: Node3D = $"../FirstPov/EquippedItem"
+@onready var equipped_item: Node3D = $"../FirstPov/WeaponRig/EquippedItem"
 
 
 var InventorySlots : Array[InventorySlot]= []
@@ -34,7 +34,11 @@ func pickupItem(item : ItemData):
 			break
 	
 	if !foundSlot:
+		# Inventory full: drop the item back into the world instead of losing it.
+		if item.ItemModelPrefab == null or playerBody == null or playerBody.get_parent() == null:
+			return
 		var newItem = item.ItemModelPrefab.instantiate() as Node3D
+		playerBody.get_parent().add_child(newItem)
 		newItem.global_position = playerBody.global_position + playerBody.global_transform.basis.x * 2
 
 func ItemEquiped(slotID : int):
@@ -65,7 +69,7 @@ func ItemDroppedOnSlot(fromSlotID : int, toSlotID : int):
 	InventorySlots[fromSlotID].FillSlot(toSlotItem,EquippedSlot == fromSlotID)
 
 func _can_drop_data(at_position: Vector2,data:Variant)->bool:
-	return typeof(data) == TYPE_DICTIONARY and data["Type"] == "Item"
+	return typeof(data) == TYPE_DICTIONARY and data.get("Type", "") == "Item"
 
 func _drop_data(at_position: Vector2,data:Variant)->void:
 	# --- Safety checks (prevent crash on null/invalid data) ---

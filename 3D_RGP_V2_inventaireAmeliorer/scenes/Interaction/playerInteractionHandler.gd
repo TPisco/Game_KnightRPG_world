@@ -13,7 +13,10 @@ func _input(event: InputEvent) -> void:
 func PisckUpNearestItem():
 	var nearestItem : InteractebleItem = null
 	var nearestItemDistance : float = INF
-	
+
+	for i in range(NearbyBodies.size() - 1, -1, -1):
+		if not is_instance_valid(NearbyBodies[i]):
+			NearbyBodies.remove_at(i)
 	for item in NearbyBodies:
 		if item.global_position.distance_to(global_position) < nearestItemDistance :
 			nearestItemDistance = item.global_position.distance_to(global_position)

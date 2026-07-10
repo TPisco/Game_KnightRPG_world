@@ -21,11 +21,11 @@ func _on_beat_finished(beat_id: String) -> void:
 
 func _on_continue_pressed() -> void:
 	ProgressionTracker.story_seen = true
-	ProgressionTracker.save_game()
+	SaveManager.save_settings()
 	get_tree().change_scene_to_file(FRACTURED_RUN)
 
 
 func _on_skip_pressed() -> void:
 	ProgressionTracker.story_seen = true
-	ProgressionTracker.save_game()
+	SaveManager.save_settings()
 	get_tree().change_scene_to_file(MENU)

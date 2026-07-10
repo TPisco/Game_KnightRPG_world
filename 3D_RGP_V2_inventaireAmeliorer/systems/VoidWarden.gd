@@ -4,6 +4,12 @@ extends "res://systems/BossController.gd"
 var _pulse_timer: float = 3.0
 
 
+func _ready() -> void:
+	super._ready()
+	# The Void Warden guards the path home — its defeat plays the ending beat.
+	boss_defeated.connect(func(): StoryManager.trigger_ending())
+
+
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 	if hp <= 0:
@@ -23,8 +29,10 @@ func _void_pulse() -> void:
 	if target.global_position.distance_to(global_position) > radius:
 		return
 	var dmg := int(damage * (1.2 if current_phase < 3 else 1.8))
-	if target.isGuarding:
-		target.hp -= int(dmg * ProgressionTracker.get_guard_damage_multiplier())
+	if target.has_method("take_damage"):
+		target.take_damage(dmg)
 	else:
+		if target.isGuarding:
+			dmg = maxi(1, int(dmg * ProgressionTracker.get_guard_damage_multiplier()))
 		target.hp -= dmg
-	target._updateHUD()
+		target._updateHUD()

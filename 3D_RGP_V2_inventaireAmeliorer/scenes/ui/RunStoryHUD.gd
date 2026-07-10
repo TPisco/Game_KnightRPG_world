@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var boss_label: Label = $Panel/BossLabel
 
 var _last_depth: int = -1
+var _last_seals: int = -1
 
 
 func _ready() -> void:
@@ -15,8 +16,9 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	var depth := ProgressionTracker.run_depth
-	if depth != _last_depth:
+	if depth != _last_depth or ProgressionTracker.minibosses_cleared != _last_seals:
 		_last_depth = depth
+		_last_seals = ProgressionTracker.minibosses_cleared
 		_update_realm(depth)
 
 
@@ -26,7 +28,13 @@ func _update_realm(depth: int) -> void:
 	if realm_label:
 		realm_label.text = realm.get("name", "Fractured Wastes")
 	if hint_label:
-		hint_label.text = realm.get("hint", "")
+		var seals := mini(ProgressionTracker.minibosses_cleared, 2)
+		var seal_text: String
+		if seals >= 2:
+			seal_text = "Dungeon seals: 2/2 — the Boss Gate is open!"
+		else:
+			seal_text = "Dungeon seals: %d/2 — find caves, clear their dungeons." % seals
+		hint_label.text = realm.get("hint", "") + "\n" + seal_text
 
 
 func show_boss_warning(milestone: int) -> void:
