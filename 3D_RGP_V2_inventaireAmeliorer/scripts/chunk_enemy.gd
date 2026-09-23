@@ -12,6 +12,7 @@ var target = null
 var damage = 15
 var value = 10
 var attack_interval: float = 1.2
+var mob_id: String = "Creature"  # pretty name for the Handbook bestiary
 var _attack_cd: float = 0.0
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
@@ -32,6 +33,8 @@ func _ready() -> void:
 ## Swaps the placeholder capsule for a FantasyPack model and refits the
 ## collision capsule + health bar to the model's real size.
 func set_mob_visual(model_path: String) -> void:
+	mob_id = model_path.get_file().get_basename() \
+		.trim_prefix("mob_").trim_prefix("miniboss_").replace("_", " ").capitalize()
 	var model := ModelLibrary.apply_character_model(self, model_path, true, true)
 	if model == null:
 		return

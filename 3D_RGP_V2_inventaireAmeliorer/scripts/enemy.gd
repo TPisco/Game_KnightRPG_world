@@ -11,6 +11,7 @@ var gravity = 9.8
 var target = null
 var damage = 20
 var value = 15
+var mob_id: String = "Goblin"  # pretty name for the Handbook bestiary
 
 @export var navAgent: NavigationAgent3D
 @export var animationPlayer: AnimationPlayer

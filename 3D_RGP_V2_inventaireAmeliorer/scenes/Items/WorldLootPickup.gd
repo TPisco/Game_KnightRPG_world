@@ -141,6 +141,7 @@ func _on_body_entered(body: Node3D) -> void:
 		return
 	_picked = true
 	SoundManager.play("pickup")
+	ProgressionTracker.register_item_discovered(loot_data.ItemName)
 
 	# Skill tomes unlock a power instead of entering the inventory.
 	if loot_data.unlock_skill != "":

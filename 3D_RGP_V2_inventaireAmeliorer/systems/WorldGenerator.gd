@@ -37,18 +37,11 @@ func _ready() -> void:
 		world_seed = ProgressionTracker.run_seed + ProgressionTracker.cave_portals_cleared * 10007
 
 	_spawn_player()
-	_bind_skill_ui()
 	_last_player_chunk = _world_to_chunk(_player.global_position)
 	call_deferred("_refresh_chunks_async")
 	# Boss already unlocked (e.g. after Restart Here): offer the gate again.
 	if ProgressionTracker.minibosses_cleared >= 2:
 		call_deferred("_spawn_boss_gate_near_player")
-
-
-func _bind_skill_ui() -> void:
-	var skill_ui = get_tree().current_scene.get_node_or_null("SkillSelectionUI")
-	if skill_ui and is_instance_valid(_player) and skill_ui.has_method("bind_player"):
-		skill_ui.bind_player(_player)
 
 
 func _process(_delta: float) -> void:

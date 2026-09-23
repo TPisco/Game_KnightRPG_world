@@ -100,3 +100,34 @@ static func place_prop(parent: Node3D, path: String, local_pos: Vector3, yaw: fl
 	if scale != 1.0:
 		prop.scale = Vector3.ONE * scale
 	return prop
+
+
+## Solid prop: like place_prop but wraps the model in a StaticBody3D with a
+## box collider sized to the model's own AABB, so the player cannot walk
+## through it. Use for structural furnishings (pillars, walls, counters).
+## `shrink` tightens the footprint (0.8 = 80% of the visual width) so tall
+## thin props don't feel wider than they look.
+static func place_solid_prop(parent: Node3D, path: String, local_pos: Vector3,
+		yaw: float = 0.0, scale: float = 1.0, shrink: float = 0.85) -> Node3D:
+	var prop := place_prop(parent, path, local_pos, yaw, scale)
+	if prop == null:
+		return null
+	var aabb := measure(prop)
+	if scale != 1.0:
+		aabb = AABB(aabb.position * scale, aabb.size * scale)
+	var body := StaticBody3D.new()
+	body.collision_layer = 1
+	body.collision_mask = 0
+	prop.add_child(body)
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(
+		maxf(aabb.size.x * shrink, 0.25),
+		maxf(aabb.size.y, 0.4),
+		maxf(aabb.size.z * shrink, 0.25)
+	)
+	var col := CollisionShape3D.new()
+	col.shape = shape
+	# Center the collider on the model's real vertical span (feet-origin safe).
+	col.position = Vector3(0, aabb.position.y + aabb.size.y * 0.5, 0)
+	body.add_child(col)
+	return prop

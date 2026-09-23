@@ -23,8 +23,8 @@ func _ready() -> void:
 func _decorate() -> void:
 	var pack := "res://assets/model/FantasyPack/"
 	for s in [1.0, -1.0]:
-		ModelLibrary.place_prop(self, pack + "dungeon/dungeon_pillar.glb", Vector3(11.0 * s, 0, -6.0))
-		ModelLibrary.place_prop(self, pack + "dungeon/dungeon_pillar.glb", Vector3(11.0 * s, 0, 6.0))
+		ModelLibrary.place_solid_prop(self, pack + "dungeon/dungeon_pillar.glb", Vector3(11.0 * s, 0, -6.0))
+		ModelLibrary.place_solid_prop(self, pack + "dungeon/dungeon_pillar.glb", Vector3(11.0 * s, 0, 6.0))
 		ModelLibrary.place_prop(self, pack + "dungeon/brazier.glb", Vector3(7.0 * s, 0, -11.0))
 		ModelLibrary.place_prop(self, pack + "dungeon/brazier.glb", Vector3(7.0 * s, 0, 11.0))
 	ModelLibrary.place_prop(self, pack + "dungeon/chain_hanging.glb", Vector3(-4.0, 11.5, 0.0))
@@ -57,6 +57,19 @@ func _rebuild_content() -> void:
 	if boss_scene == null:
 		return
 	var boss := boss_scene.instantiate()
+
+	# Real bosses must clearly outclass the mini-bosses (320 hp / 30 dmg x diff):
+	# roughly double their health and half again their damage at equal depth.
+	# Set BEFORE add_child so phases, health bars and the BossUI use the
+	# scaled values as the true maximum.
+	var diff := 1.0 + ProgressionTracker.run_depth * 0.12
+	if "hp" in boss:
+		boss.hp = int(boss.hp * 2.6 * diff)
+	if "damage" in boss:
+		boss.damage = int(boss.damage * 1.5 * diff)
+	if "value" in boss:
+		boss.value = int(boss.value * diff)
+
 	_content.add_child(boss)
 	boss.global_position = boss_spawn.global_position
 

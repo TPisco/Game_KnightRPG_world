@@ -6,7 +6,6 @@ const JUMP_VELOCITY := 4.5
 const STAMINA_REGEN := 10.0
 const MANA_REGEN := 4.0
 const DAMAGE_NUMBER_SCENE := preload("res://scenes/ui/DamageNumber.tscn")
-const SKILL_UI_SCENE := preload("res://scenes/ui/SkillSelectionUI.tscn")
 const BULLET_SCENE := preload("res://scenes/projectiles/Bullet.tscn")
 const STAFF_BOLT_SCENE := preload("res://scenes/projectiles/ArcaneBolt.tscn")
 
@@ -90,14 +89,13 @@ func _ready() -> void:
 		skill_system.setup(self, animation_player)
 	if inventory_ui.has_signal("equipment_changed"):
 		inventory_ui.equipment_changed.connect(func(_b): refresh_stats())
-	var run_root := get_tree().current_scene
-	if run_root:
-		var skill_ui = run_root.find_child("SkillSelectionUI", true, false)
-		if skill_ui and skill_ui.has_method("bind_player"):
-			skill_ui.bind_player(self)
 	ProgressionTracker.level_up.connect(func(_l): refresh_stats())
 	if HubWorldStartup.is_hub_scene(get_tree().current_scene):
 		call_deferred("_setup_hub_testing")
+		Global.build_mode_active = false
+		var home_editor := BuildModeController.new()
+		home_editor.setup(self)
+		add_child(home_editor)
 		if not Global.hub_story_shown:
 			Global.hub_story_shown = true
 			StoryManager.trigger_story_event("hub_memory")
@@ -117,7 +115,6 @@ func _restore_saved_state() -> void:
 
 func setup_for_hub_testing() -> void:
 	if Global.hub_test_applied:
-		_ensure_skill_ui()
 		return
 	Global.hub_test_mode = true
 	ProgressionTracker.strength = 100
@@ -146,27 +143,13 @@ func setup_for_hub_testing() -> void:
 	gold = maxi(gold, 5000)
 	refresh_stats()
 	add_test_mode_effect()
-	_ensure_skill_ui()
 	Global.hub_test_applied = true
 
 
 func _setup_hub_testing() -> void:
 	if Global.hub_test_applied:
-		_ensure_skill_ui()
 		return
 	setup_for_hub_testing()
-
-
-func _ensure_skill_ui() -> void:
-	var run_root := get_tree().current_scene
-	if run_root == null:
-		return
-	var skill_ui = run_root.get_node_or_null("SkillSelectionUI")
-	if skill_ui == null:
-		skill_ui = SKILL_UI_SCENE.instantiate()
-		run_root.add_child(skill_ui)
-	if skill_ui.has_method("bind_player"):
-		skill_ui.bind_player(self)
 
 
 func add_test_mode_effect() -> void:
@@ -181,7 +164,7 @@ func add_test_mode_effect() -> void:
 	glow.position = Vector3(0, 1.2, 0)
 	var label := Label3D.new()
 	label.name = "TestModeLabel"
-	label.text = "TEST MODE\nPress K — skills"
+	label.text = "TEST MODE\nPress K — Handbook"
 	label.font_size = 28
 	label.modulate = Color(0.4, 0.9, 1.0)
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -284,7 +267,7 @@ func _physics_process(delta: float) -> void:
 	mana = minf(max_mana, mana + MANA_REGEN * delta)
 	_update_dynamic_hud()
 
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if Input.is_action_just_pressed("jump") and is_on_floor() and not Global.build_mode_active:
 		velocity.y = jump_velocity
 
 	handle_movement(delta)
@@ -293,6 +276,12 @@ func _physics_process(delta: float) -> void:
 
 
 func handle_movement(_delta: float) -> void:
+	# In the home editor WASD pans the bird's-eye camera, so the knight
+	# stands still and acts as a scale reference for the layout.
+	if Global.build_mode_active:
+		velocity.x = 0.0
+		velocity.z = 0.0
+		return
 	var input_dir := Input.get_vector("left", "right", "foward", "backward")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
@@ -481,6 +470,9 @@ func _has_weapon_out() -> bool:
 
 
 func _input(event: InputEvent) -> void:
+	# The home editor takes over the controls entirely while it is open.
+	if Global.build_mode_active:
+		return
 	# No attacking/casting while the inventory (visible cursor) is open.
 	if _has_weapon_out() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		_attack(event)
@@ -532,6 +524,10 @@ func _setup_combat_ui() -> void:
 	power_panel.setup(self)
 	add_child(power_panel)
 
+	var handbook := Handbook.new()
+	handbook.setup(self)
+	add_child(handbook)
+
 
 ## FantasyPack knight body: shown in third person, hidden in first person.
 func _setup_knight_model() -> void:
@@ -549,6 +545,17 @@ func _setup_knight_model() -> void:
 	var capsule := get_node_or_null("MeshInstance3D") as MeshInstance3D
 	if capsule:
 		capsule.visible = false
+
+
+## Body visibility overrides used by the home editor's bird's-eye view.
+func set_body_visible(shown: bool) -> void:
+	if _knight_model:
+		_knight_model.visible = shown
+
+
+func restore_body_visibility() -> void:
+	if _knight_model:
+		_knight_model.visible = third_person_camera != null and third_person_camera.current
 
 
 func _switch_view() -> void:

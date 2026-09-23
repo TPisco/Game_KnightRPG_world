@@ -44,7 +44,18 @@ func begin_death() -> void:
 		return
 	_dying = true
 	_disable_host_collisions()
+	_register_kill_for_handbook()
 	_give_rewards()
+
+
+## Adventurer Handbook bookkeeping: who fell, by pretty name.
+func _register_kill_for_handbook() -> void:
+	if "boss_name" in _host:
+		ProgressionTracker.register_boss_kill(str(_host.boss_name))
+	elif "mob_id" in _host and str(_host.mob_id) != "":
+		ProgressionTracker.register_mob_kill(str(_host.mob_id))
+	else:
+		ProgressionTracker.register_mob_kill("Creature")
 	_spawn_death_particles()
 	SoundManager.play("death")
 	if _anim and _anim.has_animation(death_anim_name):

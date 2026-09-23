@@ -93,7 +93,7 @@ func _input(event: InputEvent) -> void:
 	if _inventory == null or not is_instance_valid(_inventory):
 		return
 	# Only during live gameplay — never while a menu owns the mouse.
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED or Global.build_mode_active:
 		return
 	for i in 5:
 		if event.is_action_pressed("hotbar_%d" % (i + 1)):

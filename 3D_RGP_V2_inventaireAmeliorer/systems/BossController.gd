@@ -16,6 +16,7 @@ const PORTAL_SCENE := preload("res://scenes/world/cave_portal.tscn")
 
 var max_hp: int = 200
 var current_phase: int = 1
+var _base_damage: int = 25
 var _xp_awarded: bool = false
 var _attack_cd: float = 0.0
 var _slam_cd: float = 0.0
@@ -24,6 +25,7 @@ var _slam_cd: float = 0.0
 func _ready() -> void:
 	super._ready()
 	max_hp = hp
+	_base_damage = damage
 	add_to_group("bosses")
 	if model_path != "" and ModelLibrary.exists(model_path):
 		ModelLibrary.apply_character_model(self, model_path, true, true)
@@ -72,7 +74,8 @@ func _update_phase() -> void:
 	if new_phase != current_phase:
 		current_phase = new_phase
 		phase_changed.emit(current_phase)
-		damage = 20 + current_phase * 8
+		# Escalate relative to the boss's (scaled) base damage.
+		damage = int(_base_damage * (1.0 + 0.18 * (current_phase - 1)))
 		speed = 2.0 + current_phase * 0.5
 		_on_phase_changed(current_phase)
 

@@ -1,7 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://c8fracturedrun1"]
 
 [ext_resource type="Script" path="res://systems/WorldGenerator.gd" id="1_wgen"]
-[ext_resource type="PackedScene" uid="uid://c8skillselect1" path="res://scenes/ui/SkillSelectionUI.tscn" id="2_skillui"]
 [ext_resource type="PackedScene" uid="uid://c8runstoryhud1" path="res://scenes/ui/RunStoryHUD.tscn" id="3_story"]
 [ext_resource type="PackedScene" uid="uid://c8bossui00001" path="res://scenes/ui/BossUI.tscn" id="4_bossui"]
 
@@ -21,8 +20,6 @@ glow_intensity = 0.6
 glow_bloom = 0.1
 
 [node name="FracturedRun" type="Node3D"]
-
-[node name="SkillSelectionUI" parent="." instance=ExtResource("2_skillui")]
 
 [node name="RunStoryHUD" parent="." instance=ExtResource("3_story")]
 

@@ -25,7 +25,7 @@ const REMAP_ACTIONS := [
 	["hotbar_5", "Hotbar Slot 5"],
 	["interact", "Pick Up Item"],
 	["inventory", "Inventory"],
-	["skill_menu", "Skills & Stats Menu"],
+	["skill_menu", "Adventurer Handbook"],
 	["switch", "Switch Camera View"],
 	["escape", "Quit To Menu"],
 ]

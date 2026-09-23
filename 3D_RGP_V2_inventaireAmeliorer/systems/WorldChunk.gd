@@ -4,7 +4,6 @@ extends Node3D
 
 const CHUNK_SIZE := 32
 const VERTEX_STEP := 2
-const SKIRT_DEPTH := 22.0
 
 static var _cached_prop_scenes: Array[PackedScene] = []
 static var _props_loaded: bool = false
@@ -430,16 +429,19 @@ func _build_terrain() -> void:
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 	body.add_child(mesh_instance)
 
-	var base_resolution := (CHUNK_SIZE / VERTEX_STEP) + 1
-	# One extra ring on each side so adjacent chunks share edge vertices.
-	var x_offset := -1
-	var z_offset := -1
-	var grid_steps := base_resolution + 1
+	# Vertices span EXACTLY 0..CHUNK_SIZE, no overlap ring. Neighbouring
+	# chunks share those world positions and sample the same height function,
+	# so edges meet seamlessly on their own. Overlapping tiles used to draw
+	# the ground TWICE along every border, and the two coincident surfaces
+	# fought for depth — that is what made the terrain shimmer and flicker.
+	var x_offset := 0
+	var z_offset := 0
+	var grid_steps := CHUNK_SIZE / VERTEX_STEP
 	var heights := _build_height_grid(grid_steps, x_offset, z_offset)
 	var grid_size := grid_steps + 1
 
 	var top_mesh := _build_terrain_top_mesh(grid_size, heights, x_offset, z_offset)
-	mesh_instance.mesh = _build_terrain_visual_mesh(grid_size, heights, top_mesh, x_offset, z_offset)
+	mesh_instance.mesh = top_mesh
 
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color = _biome_terrain_color()
@@ -456,6 +458,7 @@ func _build_terrain() -> void:
 
 
 func _build_terrain_top_mesh(grid_size: int, heights: Array, x_offset: int, z_offset: int) -> ArrayMesh:
+	var normals := _build_normal_grid(grid_size, x_offset, z_offset)
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 
@@ -465,104 +468,39 @@ func _build_terrain_top_mesh(grid_size: int, heights: Array, x_offset: int, z_of
 			var i10 := (x + 1) + z * grid_size
 			var i01 := x + (z + 1) * grid_size
 			var i11 := (x + 1) + (z + 1) * grid_size
-			_add_terrain_tri(st, x + x_offset, z + z_offset, heights[i00])
-			_add_terrain_tri(st, x + 1 + x_offset, z + z_offset, heights[i10])
-			_add_terrain_tri(st, x + x_offset, z + 1 + z_offset, heights[i01])
-			_add_terrain_tri(st, x + 1 + x_offset, z + z_offset, heights[i10])
-			_add_terrain_tri(st, x + 1 + x_offset, z + 1 + z_offset, heights[i11])
-			_add_terrain_tri(st, x + x_offset, z + 1 + z_offset, heights[i01])
+			_add_terrain_tri(st, x + x_offset, z + z_offset, heights[i00], normals[i00])
+			_add_terrain_tri(st, x + 1 + x_offset, z + z_offset, heights[i10], normals[i10])
+			_add_terrain_tri(st, x + x_offset, z + 1 + z_offset, heights[i01], normals[i01])
+			_add_terrain_tri(st, x + 1 + x_offset, z + z_offset, heights[i10], normals[i10])
+			_add_terrain_tri(st, x + 1 + x_offset, z + 1 + z_offset, heights[i11], normals[i11])
+			_add_terrain_tri(st, x + x_offset, z + 1 + z_offset, heights[i01], normals[i01])
 
-	st.generate_normals()
+	# Normals are supplied analytically below — do NOT call generate_normals(),
+	# which derives them from this chunk's triangles alone and leaves a
+	# visible lighting seam along every chunk border.
 	return st.commit()
 
 
-func _build_terrain_visual_mesh(grid_size: int, heights: Array, top_mesh: ArrayMesh, x_offset: int, z_offset: int) -> ArrayMesh:
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	st.append_from(top_mesh, 0, Transform3D.IDENTITY)
-	_add_terrain_skirt(st, grid_size, heights, x_offset, z_offset)
-	st.generate_normals()
-	return st.commit()
+## Normals taken from the slope of the shared height field, so neighbouring
+## chunks produce identical normals at shared edges and the lighting flows
+## across borders with no grid lines.
+func _build_normal_grid(grid_size: int, x_offset: int, z_offset: int) -> Array:
+	var normals: Array = []
+	normals.resize(grid_size * grid_size)
+	var e := float(VERTEX_STEP)
+	for z in range(grid_size):
+		for x in range(grid_size):
+			var wx := chunk_coord.x * CHUNK_SIZE + (x + x_offset) * VERTEX_STEP
+			var wz := chunk_coord.y * CHUNK_SIZE + (z + z_offset) * VERTEX_STEP
+			var dx := (_sample_height(wx + e, wz) - _sample_height(wx - e, wz)) / (2.0 * e)
+			var dz := (_sample_height(wx, wz + e) - _sample_height(wx, wz - e)) / (2.0 * e)
+			normals[x + z * grid_size] = Vector3(-dx, 1.0, -dz).normalized()
+	return normals
 
 
-func _add_terrain_tri(st: SurfaceTool, x: int, z: int, height: float) -> void:
+func _add_terrain_tri(st: SurfaceTool, x: int, z: int, height: float, normal: Vector3) -> void:
+	st.set_normal(normal)
 	st.add_vertex(Vector3(x * VERTEX_STEP, height, z * VERTEX_STEP))
-
-
-func _add_terrain_skirt(st: SurfaceTool, grid_size: int, heights: Array, x_offset: int, z_offset: int) -> void:
-	var bottom_y := -SKIRT_DEPTH
-	var min_x := x_offset * VERTEX_STEP
-	var min_z := z_offset * VERTEX_STEP
-	var max_x := (x_offset + grid_size - 1) * VERTEX_STEP
-	var max_z := (z_offset + grid_size - 1) * VERTEX_STEP
-
-	# South edge (min_z)
-	for x in range(grid_size - 1):
-		var h0: float = heights[x + 0 * grid_size]
-		var h1: float = heights[(x + 1) + 0 * grid_size]
-		var x0 := (x + x_offset) * VERTEX_STEP
-		var x1 := (x + 1 + x_offset) * VERTEX_STEP
-		_add_skirt_quad(
-			st,
-			Vector3(x0, h0, min_z),
-			Vector3(x1, h1, min_z),
-			Vector3(x1, bottom_y, min_z),
-			Vector3(x0, bottom_y, min_z)
-		)
-
-	# North edge (max_z)
-	for x in range(grid_size - 1):
-		var z_row := grid_size - 1
-		var h0: float = heights[x + z_row * grid_size]
-		var h1: float = heights[(x + 1) + z_row * grid_size]
-		var x0 := (x + x_offset) * VERTEX_STEP
-		var x1 := (x + 1 + x_offset) * VERTEX_STEP
-		var z_edge := max_z
-		_add_skirt_quad(
-			st,
-			Vector3(x1, h1, z_edge),
-			Vector3(x0, h0, z_edge),
-			Vector3(x0, bottom_y, z_edge),
-			Vector3(x1, bottom_y, z_edge)
-		)
-
-	for z in range(grid_size - 1):
-		var h0: float = heights[0 + z * grid_size]
-		var h1: float = heights[0 + (z + 1) * grid_size]
-		var z0 := (z + z_offset) * VERTEX_STEP
-		var z1 := (z + 1 + z_offset) * VERTEX_STEP
-		var x_edge := min_x
-		_add_skirt_quad(
-			st,
-			Vector3(x_edge, h0, z1),
-			Vector3(x_edge, h1, z0),
-			Vector3(x_edge, bottom_y, z0),
-			Vector3(x_edge, bottom_y, z1)
-		)
-
-	for z in range(grid_size - 1):
-		var x_col := grid_size - 1
-		var h0: float = heights[x_col + z * grid_size]
-		var h1: float = heights[x_col + (z + 1) * grid_size]
-		var z0 := (z + z_offset) * VERTEX_STEP
-		var z1 := (z + 1 + z_offset) * VERTEX_STEP
-		var x_edge := max_x
-		_add_skirt_quad(
-			st,
-			Vector3(x_edge, h1, z1),
-			Vector3(x_edge, h0, z0),
-			Vector3(x_edge, bottom_y, z0),
-			Vector3(x_edge, bottom_y, z1)
-		)
-
-
-func _add_skirt_quad(st: SurfaceTool, v0: Vector3, v1: Vector3, v2: Vector3, v3: Vector3) -> void:
-	st.add_vertex(v0)
-	st.add_vertex(v1)
-	st.add_vertex(v2)
-	st.add_vertex(v0)
-	st.add_vertex(v2)
-	st.add_vertex(v3)
 
 
 func _scatter_props(depth: int) -> void:

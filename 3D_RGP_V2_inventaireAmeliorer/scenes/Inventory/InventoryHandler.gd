@@ -26,6 +26,8 @@ func _ready() -> void:
 		InventorySlots.append(slot)
 
 func pickupItem(item : ItemData):
+	if item:
+		ProgressionTracker.register_item_discovered(item.ItemName)
 	var foundSlot : bool = false
 	for slot in InventorySlots:
 		if !slot.SlotFilled :

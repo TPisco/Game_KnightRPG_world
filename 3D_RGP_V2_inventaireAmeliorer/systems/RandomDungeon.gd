@@ -77,7 +77,7 @@ func _rebuild_room() -> void:
 		var px := rng.randf_range(-w * 0.35, w * 0.35)
 		var pz := rng.randf_range(-l * 0.28, l * 0.28)
 		var pillar := "dungeon/dungeon_pillar.glb" if rng.randf() < 0.6 else "dungeon/dungeon_pillar_broken.glb"
-		ModelLibrary.place_prop(_room, pack + pillar, Vector3(px, 0, pz), rng.randf() * TAU)
+		ModelLibrary.place_solid_prop(_room, pack + pillar, Vector3(px, 0, pz), rng.randf() * TAU)
 	for prop in ["cave/bone_pile.glb", "cave/crystal_cluster_purple.glb", "dungeon/brazier.glb", "cave/rock_medium.glb"]:
 		if rng.randf() < 0.75:
 			ModelLibrary.place_prop(_room, pack + prop,

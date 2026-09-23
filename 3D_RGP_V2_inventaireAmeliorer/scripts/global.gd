@@ -8,6 +8,8 @@ var continue_run: bool = false
 var hub_test_mode: bool = false
 var hub_test_applied: bool = false
 var hub_story_shown: bool = false
+## True while the hub home editor owns the controls (blocks combat input).
+var build_mode_active: bool = false
 
 ## Last position on the surface world — "Restart Here" respawns the player
 ## there so dungeon deaths return to the same realm they came from.

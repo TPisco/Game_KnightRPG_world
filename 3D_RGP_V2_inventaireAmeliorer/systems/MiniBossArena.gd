@@ -29,8 +29,8 @@ func _ready() -> void:
 func _decorate() -> void:
 	var pack := "res://assets/model/FantasyPack/"
 	for s in [1.0, -1.0]:
-		ModelLibrary.place_prop(self, pack + "dungeon/dungeon_pillar.glb", Vector3(7.0 * s, 0, -3.0))
-		ModelLibrary.place_prop(self, pack + "dungeon/dungeon_pillar_broken.glb", Vector3(7.5 * s, 0, 5.0))
+		ModelLibrary.place_solid_prop(self, pack + "dungeon/dungeon_pillar.glb", Vector3(7.0 * s, 0, -3.0))
+		ModelLibrary.place_solid_prop(self, pack + "dungeon/dungeon_pillar_broken.glb", Vector3(7.5 * s, 0, 5.0))
 		ModelLibrary.place_prop(self, pack + "dungeon/brazier.glb", Vector3(4.5 * s, 0, -8.0))
 	ModelLibrary.place_prop(self, pack + "cave/bone_pile.glb", Vector3(-3.0, 0, -6.0), 0.8)
 	ModelLibrary.place_prop(self, pack + "dungeon/chain_hanging.glb", Vector3(3.0, 7.6, 2.0))

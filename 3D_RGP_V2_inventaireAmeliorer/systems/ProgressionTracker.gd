@@ -30,6 +30,31 @@ var cave_portals_cleared: int = 0
 var minibosses_cleared: int = 0
 var temp_buffs: Dictionary = {}
 
+# --- Adventurer Handbook records (saved per run) ---
+var mob_kills: Dictionary = {}       # pretty name -> count
+var boss_kills: Dictionary = {}      # boss name -> count
+var discovered_items: Array[String] = []
+
+
+func register_mob_kill(display_name: String) -> void:
+	mob_kills[display_name] = int(mob_kills.get(display_name, 0)) + 1
+
+
+func register_boss_kill(display_name: String) -> void:
+	boss_kills[display_name] = int(boss_kills.get(display_name, 0)) + 1
+
+
+func register_item_discovered(item_name: String) -> void:
+	if item_name != "" and item_name not in discovered_items:
+		discovered_items.append(item_name)
+
+
+func get_total_mob_kills() -> int:
+	var total := 0
+	for key in mob_kills:
+		total += int(mob_kills[key])
+	return total
+
 const SKILL_DEFS := {
 	"power_slash": {"level": 1, "path": "strength"},
 	"arcane_bolt": {"level": 3, "path": "magic"},
@@ -215,6 +240,9 @@ func get_save_dict() -> Dictionary:
 		"cave_portals_cleared": cave_portals_cleared,
 		"minibosses_cleared": minibosses_cleared,
 		"unlocked_passives": unlocked_passives,
+		"mob_kills": mob_kills,
+		"boss_kills": boss_kills,
+		"discovered_items": discovered_items,
 	}
 
 
@@ -242,6 +270,13 @@ func apply_save_dict(parsed: Dictionary) -> void:
 	if saved_passives is Array:
 		for passive_id in saved_passives:
 			unlocked_passives.append(str(passive_id))
+	mob_kills = parsed.get("mob_kills", {}) if parsed.get("mob_kills") is Dictionary else {}
+	boss_kills = parsed.get("boss_kills", {}) if parsed.get("boss_kills") is Dictionary else {}
+	discovered_items.clear()
+	var saved_items = parsed.get("discovered_items", [])
+	if saved_items is Array:
+		for item_name in saved_items:
+			discovered_items.append(str(item_name))
 	_check_skill_unlocks()
 	_check_passive_unlocks()
 
@@ -270,6 +305,9 @@ func reset_progression() -> void:
 	cave_portals_cleared = 0
 	minibosses_cleared = 0
 	temp_buffs.clear()
+	mob_kills.clear()
+	boss_kills.clear()
+	discovered_items.clear()
 
 
 func _check_skill_unlocks() -> void:

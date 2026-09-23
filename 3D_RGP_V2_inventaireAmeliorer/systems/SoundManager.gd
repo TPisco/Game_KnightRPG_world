@@ -25,6 +25,7 @@ func _ready() -> void:
 	_sounds["staff"] = _make_tone(520.0, 0.14, 0.40, "sine")
 	_sounds["buy"] = _make_tone(990.0, 0.15, 0.35, "sine")
 	_sounds["deny"] = _make_tone(160.0, 0.15, 0.35, "square")
+	_sounds["page"] = _make_tone(340.0, 0.09, 0.25, "saw")
 
 
 func play(sound_name: String) -> void:
